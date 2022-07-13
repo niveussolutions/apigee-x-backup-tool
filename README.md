@@ -1,19 +1,19 @@
 # APIGEE - Backup automation script
 
-**The automation script can backup api proxies, Shared flows and Api Products locally**
+**The automation script can backup Apigee Api Proxies, Shared flows, Api Products etc**
 
-**You can extend the script to backup to cloud storage**
+> NOTE: We can extend the script to backup to cloud storage
 
-**pre-requisites**
 
-1. Download gcloud (if not downloaded yet!)
+### Pre-requisites
+
+1. Download [gcloud](https://cloud.google.com/sdk/docs/install)
 
 2. run `gcloud auth application-default login`
 
-3. set gcp project
-   `gcloud config set project project_id`
+3. set gcp project `gcloud config set project <project_id>`
 
-4. Install nodejs (if not installed)
+4. Install [nodejs](https://nodejs.org/)
 
 5. Clone the project
 
@@ -21,7 +21,9 @@
 
 7. create a directory where you want to backup all proxies
 
-8. add organization(apigee org name), local backup basepath (backup directory basepath) in config.js
+8. **update organization(apigee org name), local backup basepath (backup directory basepath) in config.js**
+
+### Start Backup
 
 run `npm run backupApiProxy` to backup all Api Proxy revisions
 
@@ -41,4 +43,4 @@ run `npm run backUpCustomReports` to backup all Custom reports
 
 run `npm run backupAll --envname=name-of-environment` to backup Api Proxy, Api product,developer apps , developers, target server
 
-**Pass envname argument as shown above, if you want to backup target server**
+> NOTE: Pass `envname` argument as shown above, if you want to backup target server
