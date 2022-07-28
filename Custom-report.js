@@ -30,6 +30,12 @@ const backUpCustomReports = async () => {
       organizationName,
       options
     );
+    if (!reportsInApigee || !Array.isArray(reportsInApigee)) {
+      console.log(
+        "Something went wrong: Could not fetch custom reports from Apigee"
+      );
+      return;
+    }
     reportsInApigee.forEach((cs) => {
       const fileName = `${cs.displayName
         .replace(" ", "-")

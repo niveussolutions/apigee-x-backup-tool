@@ -16,12 +16,8 @@ const {
 } = require("./utils.js");
 const config = require("./config.js");
 
-//uncomment the below code to enable backup to cloud storage  and use the name of a bucket u created on cloud storage
-
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath;
-const prefix = "api proxies/";
-const delimeter = "/";
 
 const backUpSharedFlow = async () => {
   try {
@@ -37,6 +33,16 @@ const backUpSharedFlow = async () => {
       options
     );
 
+    if (!sfFromApigee || !Array.isArray(sfFromApigee)) {
+      console.log(
+        `Something went wrong: Could not fetch Shared flows from Apigee`
+      );
+      return;
+    } else if (Array.isArray(sfFromApigee) && sfFromApigee.length === 0) {
+      console.log(`No Shared Flows Found`);
+      return;
+    }
+
     const backedUpProxiesLocally = getSFAndRevisionsStoredLocally(
       localBackUpPath + "shared flows"
     );
@@ -49,6 +55,12 @@ const backUpSharedFlow = async () => {
             sf,
             options
           );
+          if (!revisions || !Array.isArray(revisions)) {
+            console.log(
+              `Something is wrong: Cannot fetch revisions for ${sf} from apigee`
+            );
+            return;
+          }
 
           await Promise.all(
             revisions.map(async (revision) => {
@@ -71,18 +83,23 @@ const backUpSharedFlow = async () => {
                   options.headers.Authorization
                 );
 
+                if (!data) {
+                  console.log(
+                    `Something went wrong: Could not fetch the revision ${revision} for shared flow ${proxy}`
+                  );
+                  return;
+                }
+
                 const fileName = `${sf}-revision-${revision}.zip`;
 
-                if (data) {
-                  if (!isBackedUpInLocally) {
-                    await saveSharedFlowRevisionLocally(
-                      localBackUpPath + "shared flows",
-                      fileName,
-                      data,
-                      sf,
-                      revision
-                    );
-                  }
+                if (!isBackedUpInLocally) {
+                  await saveSharedFlowRevisionLocally(
+                    localBackUpPath + "shared flows",
+                    fileName,
+                    data,
+                    sf,
+                    revision
+                  );
                 }
               } catch (error) {
                 console.error(error.message);

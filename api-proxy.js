@@ -17,12 +17,8 @@ const {
 } = require("./utils.js");
 const config = require("./config.js");
 
-//uncomment the below code to enable backup to cloud storage  and use the name of a bucket u created on cloud storage
-
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath;
-const prefix = "api proxies/";
-const delimeter = "/";
 
 const backUpApiProxy = async () => {
   try {
@@ -38,15 +34,18 @@ const backUpApiProxy = async () => {
       options
     );
 
-    // uncomment the below code to enable backup to cloud storage
-    // const backedUpProxyDetailsFromStorage =
-    //   await getProxyAndRevisionsStoredInStorage(
-    //     {
-    //       prefix,
-    //       delimeter,
-    //     },
-    //     bucket
-    //   );
+    if (!proxiesFromApigee || !Array.isArray(proxiesFromApigee)) {
+      console.log(
+        "Something went wrong: Could not fetch  Api proxies from Apigee"
+      );
+      return;
+    } else if (
+      Array.isArray(proxiesFromApigee) &&
+      proxiesFromApigee.length === 0
+    ) {
+      console.log("No Api proxies found");
+      return;
+    }
 
     const backedUpProxiesLocally = getProxyAndRevisionsStoredLocally(
       localBackUpPath + "api proxies"
@@ -61,23 +60,21 @@ const backUpApiProxy = async () => {
             options
           );
 
+          if (!revisions || !Array.isArray(revisions)) {
+            console.log(
+              `Something is wrong: Cannot fetch revisions for ${proxy} from apigee`
+            );
+            return;
+          }
+
           await Promise.all(
             revisions.map(async (revision) => {
               try {
-                // uncomment the below code to enable backup to cloud storage
-                // let isBackedUpInStorage = backedUpProxyDetailsFromStorage[proxy]
-                //   ? backedUpProxyDetailsFromStorage[proxy].includes(revision)
-                //   : false;
-
                 let isBackedUpInLocally = backedUpProxiesLocally[proxy]
                   ? backedUpProxiesLocally[proxy].includes(revision)
                   : false;
 
-                //uncomment isBackedUpInStorage && in if to enable backup to cloud storage
-                if (
-                  // isBackedUpInStorage &&
-                  isBackedUpInLocally
-                ) {
+                if (isBackedUpInLocally) {
                   console.log(
                     `proxy ${proxy} with revision ${revision} is already backed up `
                   );
@@ -87,11 +84,6 @@ const backUpApiProxy = async () => {
                     `proxy ${proxy} with revision ${revision} is already backed up locally`
                   );
                 }
-                // else if (isBackedUpInStorage) {
-                //   console.log(
-                //     `proxy ${proxy} with revision ${revision} is already backed up in cloud storage`
-                //   );
-                // }
 
                 const data = await downloadRevisionForProxy(
                   proxy,
@@ -100,30 +92,23 @@ const backUpApiProxy = async () => {
                   options.headers.Authorization
                 );
 
+                if (!data) {
+                  console.log(
+                    `Something went wrong: Could not fetch the revision ${revision} for proxy ${proxy}`
+                  );
+                  return;
+                }
+
                 const fileName = `${proxy}-revision-${revision}.zip`;
 
-                if (data) {
-                  //uncomment the below code to enable backup to cloud storage
-                  // if (!isBackedUpInStorage) {
-                  //   await uploadToCloudStorage(
-                  //     proxy,
-                  //     revision,
-                  //     fileName,
-                  //     data,
-                  //     bucket,
-                  //     prefix
-                  //   );
-                  // }
-
-                  if (!isBackedUpInLocally) {
-                    await saveProxyRevisionLocally(
-                      localBackUpPath + "api proxies",
-                      fileName,
-                      data,
-                      proxy,
-                      revision
-                    );
-                  }
+                if (!isBackedUpInLocally) {
+                  await saveProxyRevisionLocally(
+                    localBackUpPath + "api proxies",
+                    fileName,
+                    data,
+                    proxy,
+                    revision
+                  );
                 }
               } catch (error) {
                 console.error(error.message);

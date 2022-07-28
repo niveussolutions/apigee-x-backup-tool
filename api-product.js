@@ -17,8 +17,6 @@ const config = require("./config.js");
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "api product";
-const prefix = "api proxies/";
-const delimeter = "/";
 
 const backUpApiProduct = async () => {
   try {
@@ -34,6 +32,19 @@ const backUpApiProduct = async () => {
       options
     );
 
+    if (!apiProductsInApigee || !Array.isArray(apiProductsInApigee)) {
+      console.log(
+        "Something went wrong: Could not fetch Api products from Apigee"
+      );
+      return;
+    } else if (
+      Array.isArray(apiProductsInApigee) &&
+      apiProductsInApigee.length === 0
+    ) {
+      console.log("No Api products found");
+      return;
+    }
+
     await Promise.all(
       apiProductsInApigee.map(async (product) => {
         const apiProduct = await getApiProductConfigFromApigee(
@@ -41,6 +52,12 @@ const backUpApiProduct = async () => {
           options,
           product
         );
+        if (!apiProduct) {
+          console.log(
+            `Something went wrong: Could not fetch Api Product-${product} from Apigee`
+          );
+          return;
+        }
         const fileName = `${product}.json`;
         saveApiProductLocally(
           localBackUpPath,

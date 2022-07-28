@@ -31,6 +31,16 @@ const backUpDev = async () => {
       options
     );
 
+    if (!devsInApigee || !Array.isArray(devsInApigee)) {
+      console.log(
+        "Something went wrong: Could not fetch developers from Apigee"
+      );
+      return;
+    } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
+      console.log("No developers found");
+      return;
+    }
+
     await Promise.all(
       devsInApigee.map(async (dev) => {
         const devJson = await getDevConfigFromApigee(
@@ -38,6 +48,12 @@ const backUpDev = async () => {
           options,
           dev
         );
+        if (!devJson) {
+          console.log(
+            `Something went wrong: Could not fetch developer ${dev} from Apigee`
+          );
+          return;
+        }
         const fileName = `${devJson.email}.json`;
         saveDevsLocally(localBackUpPath, fileName, JSON.stringify(devJson));
       })

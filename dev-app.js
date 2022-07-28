@@ -32,6 +32,16 @@ const backUpDevApp = async () => {
       options
     );
 
+    if (!devsInApigee || !Array.isArray(devsInApigee)) {
+      console.log(
+        "Something went wrong: Could not fetch developers from Apigee"
+      );
+      return;
+    } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
+      console.log("No developers found");
+      return;
+    }
+
     await Promise.all(
       devsInApigee.map(async (dev) => {
         const devAppsInApigee = await getListOfDevAppsFromApigee(
@@ -39,6 +49,20 @@ const backUpDevApp = async () => {
           dev,
           options
         );
+
+        if (!devAppsInApigee || !Array.isArray(devAppsInApigee)) {
+          console.log(
+            `Something went wrong : Could not fetch apps for developer ${dev}`
+          );
+          return;
+        } else if (
+          Array.isArray(devAppsInApigee) &&
+          devAppsInApigee.length === 0
+        ) {
+          console.log(`No apps found for ${dev}`);
+          return;
+        }
+
         await Promise.all(
           devAppsInApigee.map(async (app) => {
             const devAppJson = await getDevAppConfigFromApigee(
@@ -47,6 +71,12 @@ const backUpDevApp = async () => {
               app,
               options
             );
+
+            if (!devAppJson) {
+              console.log(
+                `Something went wrong: Could not fetch app-${app} for developer-${dev}`
+              );
+            }
             const fileName = `${dev}--${devAppJson.name}.json`;
 
             saveDevAppLocally(
