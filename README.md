@@ -20,7 +20,7 @@
 
 7. create a directory where you want to backup all proxies
 
-8. **update organization(apigee organization- you will find this in the top left dropdown in the apigee console/ project id in the GCP console ), local backup basepath (backup directory basepath) in config.js**
+8. **update organization(apigee organization- you will find this in the top left dropdown in the apigee console/ project id in the GCP console ), local backup basepath (path of the backup folder , add "/" at the end of the path) in config.js**
 
 ### Start Backup
 
