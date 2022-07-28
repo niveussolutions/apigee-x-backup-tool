@@ -96,6 +96,7 @@ const backUpApiProxy = async () => {
                   console.log(
                     `Something went wrong: Could not fetch the revision ${revision} for proxy ${proxy}`
                   );
+                  return;
                 }
 
                 const fileName = `${proxy}-revision-${revision}.zip`;

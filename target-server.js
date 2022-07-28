@@ -38,6 +38,13 @@ const backUpTargetServer = async () => {
       options
     );
 
+    if (!targetServersInApigee || !Array.isArray(targetServersInApigee)) {
+      console.log(
+        "Something went wrong: Could not fetch target servers from Apigee"
+      );
+      return;
+    }
+
     await Promise.all(
       targetServersInApigee.map(async (ts) => {
         const tsJson = await getTargetServerFromApigee(
@@ -46,6 +53,13 @@ const backUpTargetServer = async () => {
           ts,
           options
         );
+
+        if (!tsJson) {
+          console.log(
+            `Something went wrong: Could not get target server ${ts} from Apigee`
+          );
+          return;
+        }
 
         const fileName = `${tsJson.name}-${envName}.json`;
         saveTargetServerLocally(
