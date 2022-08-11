@@ -42,52 +42,48 @@ const backUpDevApp = async () => {
       return;
     }
 
-    await Promise.all(
-      devsInApigee.map(async (dev) => {
-        const devAppsInApigee = await getListOfDevAppsFromApigee(
+    devsInApigee.map(async (dev) => {
+      const devAppsInApigee = await getListOfDevAppsFromApigee(
+        organizationName,
+        dev,
+        options
+      );
+
+      if (!devAppsInApigee || !Array.isArray(devAppsInApigee)) {
+        console.log(
+          `Something went wrong : Could not fetch apps for developer ${dev}`
+        );
+        return;
+      } else if (
+        Array.isArray(devAppsInApigee) &&
+        devAppsInApigee.length === 0
+      ) {
+        console.log(`No apps found for ${dev}`);
+        return;
+      }
+
+      devAppsInApigee.map(async (app) => {
+        const devAppJson = await getDevAppConfigFromApigee(
           organizationName,
           dev,
+          app,
           options
         );
 
-        if (!devAppsInApigee || !Array.isArray(devAppsInApigee)) {
+        if (!devAppJson) {
           console.log(
-            `Something went wrong : Could not fetch apps for developer ${dev}`
+            `Something went wrong: Could not fetch app-${app} for developer-${dev}`
           );
-          return;
-        } else if (
-          Array.isArray(devAppsInApigee) &&
-          devAppsInApigee.length === 0
-        ) {
-          console.log(`No apps found for ${dev}`);
-          return;
         }
+        const fileName = `${dev}--${devAppJson.name}.json`;
 
-        await Promise.all(
-          devAppsInApigee.map(async (app) => {
-            const devAppJson = await getDevAppConfigFromApigee(
-              organizationName,
-              dev,
-              app,
-              options
-            );
-
-            if (!devAppJson) {
-              console.log(
-                `Something went wrong: Could not fetch app-${app} for developer-${dev}`
-              );
-            }
-            const fileName = `${dev}--${devAppJson.name}.json`;
-
-            saveDevAppLocally(
-              localBackUpPath,
-              fileName,
-              JSON.stringify(devAppJson)
-            );
-          })
+        saveDevAppLocally(
+          localBackUpPath,
+          fileName,
+          JSON.stringify(devAppJson)
         );
-      })
-    );
+      });
+    });
   } catch (error) {
     console.error(error.message);
   }

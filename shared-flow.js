@@ -47,72 +47,68 @@ const backUpSharedFlow = async () => {
       localBackUpPath + "shared flows"
     );
 
-    await Promise.all(
-      sfFromApigee.map(async (sf) => {
-        try {
-          const revisions = await getRevisionsForSharedFlowFromApigee(
-            organizationName,
-            sf,
-            options
+    sfFromApigee.map(async (sf) => {
+      try {
+        const revisions = await getRevisionsForSharedFlowFromApigee(
+          organizationName,
+          sf,
+          options
+        );
+        if (!revisions || !Array.isArray(revisions)) {
+          console.log(
+            `Something is wrong: Cannot fetch revisions for ${sf} from apigee`
           );
-          if (!revisions || !Array.isArray(revisions)) {
-            console.log(
-              `Something is wrong: Cannot fetch revisions for ${sf} from apigee`
-            );
-            return;
-          }
-
-          await Promise.all(
-            revisions.map(async (revision) => {
-              try {
-                let isBackedUpInLocally = backedUpProxiesLocally[sf]
-                  ? backedUpProxiesLocally[sf].includes(revision)
-                  : false;
-
-                if (isBackedUpInLocally) {
-                  console.log(
-                    `shared flow ${sf} with revision ${revision} is already backed up `
-                  );
-                  return;
-                }
-
-                const data = await downloadRevisionForSharedFlow(
-                  sf,
-                  revision,
-                  organizationName,
-                  options.headers.Authorization
-                );
-
-                if (!data) {
-                  console.log(
-                    `Something went wrong: Could not fetch the revision ${revision} for shared flow ${proxy}`
-                  );
-                  return;
-                }
-
-                const fileName = `${sf}-revision-${revision}.zip`;
-
-                if (!isBackedUpInLocally) {
-                  await saveSharedFlowRevisionLocally(
-                    localBackUpPath + "shared flows",
-                    fileName,
-                    data,
-                    sf,
-                    revision
-                  );
-                }
-              } catch (error) {
-                console.error(error.message);
-                Promise.reject();
-              }
-            })
-          );
-        } catch (error) {
-          console.error(error.message);
-          Promise.reject();
+          return;
         }
-      })
-    );
+
+        revisions.map(async (revision) => {
+          try {
+            let isBackedUpInLocally = backedUpProxiesLocally[sf]
+              ? backedUpProxiesLocally[sf].includes(revision)
+              : false;
+
+            if (isBackedUpInLocally) {
+              console.log(
+                `shared flow ${sf} with revision ${revision} is already backed up `
+              );
+              return;
+            }
+
+            const data = await downloadRevisionForSharedFlow(
+              sf,
+              revision,
+              organizationName,
+              options.headers.Authorization
+            );
+
+            if (!data) {
+              console.log(
+                `Something went wrong: Could not fetch the revision ${revision} for shared flow ${proxy}`
+              );
+              return;
+            }
+
+            const fileName = `${sf}-revision-${revision}.zip`;
+
+            if (!isBackedUpInLocally) {
+              await saveSharedFlowRevisionLocally(
+                localBackUpPath + "shared flows",
+                fileName,
+                data,
+                sf,
+                revision
+              );
+            }
+          } catch (error) {
+            console.error(error.message);
+            Promise.reject();
+          }
+        });
+      } catch (error) {
+        console.error(error.message);
+        Promise.reject();
+      }
+    });
   } catch (error) {
     console.error(error.message);
   }

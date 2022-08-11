@@ -45,27 +45,25 @@ const backUpApiProduct = async () => {
       return;
     }
 
-    await Promise.all(
-      apiProductsInApigee.map(async (product) => {
-        const apiProduct = await getApiProductConfigFromApigee(
-          organizationName,
-          options,
-          product
+    apiProductsInApigee.map(async (product) => {
+      const apiProduct = await getApiProductConfigFromApigee(
+        organizationName,
+        options,
+        product
+      );
+      if (!apiProduct) {
+        console.log(
+          `Something went wrong: Could not fetch Api Product-${product} from Apigee`
         );
-        if (!apiProduct) {
-          console.log(
-            `Something went wrong: Could not fetch Api Product-${product} from Apigee`
-          );
-          return;
-        }
-        const fileName = `${product}.json`;
-        saveApiProductLocally(
-          localBackUpPath,
-          fileName,
-          JSON.stringify(apiProduct)
-        );
-      })
-    );
+        return;
+      }
+      const fileName = `${product}.json`;
+      saveApiProductLocally(
+        localBackUpPath,
+        fileName,
+        JSON.stringify(apiProduct)
+      );
+    });
   } catch (error) {
     console.error(error.message);
   }

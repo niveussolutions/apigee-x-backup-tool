@@ -39,26 +39,24 @@ const backUpFlowHooks = async () => {
       "PostTargetFlowHook",
     ];
 
-    await Promise.all(
-      flowhooksInApigee.map(async (fh) => {
-        const tsJson = await getFlowHooksFromApigee(
-          organizationName,
-          envName,
-          fh,
-          options
+    flowhooksInApigee.map(async (fh) => {
+      const tsJson = await getFlowHooksFromApigee(
+        organizationName,
+        envName,
+        fh,
+        options
+      );
+
+      if (!tsJson) {
+        console.log(
+          `Something is wrong: Could not get Flow hook ${fh} from Apigee`
         );
+        return;
+      }
 
-        if (!tsJson) {
-          console.log(
-            `Something is wrong: Could not get Flow hook ${fh} from Apigee`
-          );
-          return;
-        }
-
-        const fileName = `${fh}-${envName}.json`;
-        saveFlowHooksLocally(localBackUpPath, fileName, JSON.stringify(tsJson));
-      })
-    );
+      const fileName = `${fh}-${envName}.json`;
+      saveFlowHooksLocally(localBackUpPath, fileName, JSON.stringify(tsJson));
+    });
   } catch (error) {
     console.error(error.message);
   }
