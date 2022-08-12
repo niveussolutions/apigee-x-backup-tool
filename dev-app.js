@@ -5,15 +5,16 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   saveDevAppLocally,
   getListOfDevsFromApigee,
   getDevAppConfigFromApigee,
   getListOfDevAppsFromApigee,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "developer apps";
@@ -33,12 +34,10 @@ const backUpDevApp = async () => {
     );
 
     if (!devsInApigee || !Array.isArray(devsInApigee)) {
-      console.log(
-        "Something went wrong: Could not fetch developers from Apigee"
-      );
+      logError("Something went wrong: Could not fetch developers from Apigee");
       return;
     } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
-      console.log("No developers found");
+      logInfo("No developers found");
       return;
     }
 
@@ -50,7 +49,7 @@ const backUpDevApp = async () => {
       );
 
       if (!devAppsInApigee || !Array.isArray(devAppsInApigee)) {
-        console.log(
+        logError(
           `Something went wrong : Could not fetch apps for developer ${dev}`
         );
         return;
@@ -58,7 +57,7 @@ const backUpDevApp = async () => {
         Array.isArray(devAppsInApigee) &&
         devAppsInApigee.length === 0
       ) {
-        console.log(`No apps found for ${dev}`);
+        logInfo(`No apps found for ${dev}`);
         return;
       }
 
@@ -71,7 +70,7 @@ const backUpDevApp = async () => {
         );
 
         if (!devAppJson) {
-          console.log(
+          logError(
             `Something went wrong: Could not fetch app-${app} for developer-${dev}`
           );
         }
@@ -85,8 +84,8 @@ const backUpDevApp = async () => {
       });
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpDevApp;
+export default backUpDevApp;

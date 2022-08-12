@@ -1,8 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const axios = require("axios");
-const { Storage } = require("@google-cloud/storage");
+import fs from "fs";
+import path from "path";
+import axios from "axios";
+import { Storage } from "@google-cloud/storage";
 const storage = new Storage();
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 ////////////api proxy/////////////////////////////////////////////////////////////
 
@@ -17,16 +18,16 @@ const saveProxyRevisionLocally = async (
   if (!fs.existsSync(`${localBackUpPath}/${proxy}`)) {
     fs.mkdir(path.join(localBackUpPath, proxy), (err) => {
       if (err) {
-        return console.error(err);
+        return logError(err);
       }
-      console.log(`Directory ${proxy} created successfully!`);
+      logSuccess(`Directory ${proxy} created successfully!`);
       fs.writeFile(
         `${localBackUpPath}/${proxy}/${fileName}`,
         fileData,
         async (err) => {
           if (err) throw err;
 
-          console.log(
+          logSuccess(
             `file ${fileName} saved to ${localBackUpPath} successfully`
           );
         }
@@ -39,30 +40,10 @@ const saveProxyRevisionLocally = async (
       async (err) => {
         if (err) throw err;
 
-        console.log(
-          `file ${fileName} saved to ${localBackUpPath} successfully`
-        );
+        logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
       }
     );
   }
-};
-
-const uploadToCloudStorage = async (
-  proxy,
-  revision,
-  filename,
-  contents,
-  bucketName,
-  prefix
-) => {
-  await storage
-    .bucket(bucketName)
-    .file(`${prefix}${proxy}/${filename}`)
-    .save(contents);
-
-  console.log(
-    `${filename}  uploaded to ${bucketName}/${prefix}${proxy}/revision ${revision}/${filename}.`
-  );
 };
 
 const downloadRevisionForProxy = async (
@@ -82,10 +63,10 @@ const downloadRevisionForProxy = async (
         responseType: "arraybuffer",
       }
     );
-    console.log(`Downloaded proxy- ${proxy} with revision- ${revision}`);
+    logSuccess(`Downloaded proxy- ${proxy} with revision- ${revision}`);
     return response.data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -98,7 +79,7 @@ const getRevisionsForProxyFromApigee = async (orgName, proxyName, options) => {
 
     return response.data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -112,7 +93,7 @@ const getListOfAllApiProxiesFromApigee = async (orgName, options) => {
 
     return data.proxies.map((proxy) => proxy.name);
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -148,53 +129,6 @@ const getProxyAndRevisionsStoredLocally = (localBackUpPath) => {
   return obj;
 };
 
-const getProxyAndRevisionsStoredInStorage = async (options, bucket) => {
-  try {
-    const [files] = await storage.bucket(bucket).getFiles(options);
-
-    const proxyToRevisionMap = {};
-
-    files.forEach((file) => {
-      let fileWithoutPrefix = file.name.split(options.prefix)[1];
-
-      if (!fileWithoutPrefix) return;
-
-      const [proxy, revisionZipFile] = fileWithoutPrefix.split(`/`);
-
-      let revision = revisionZipFile
-        .split(`${proxy}-revision-`)[1]
-        .split(".zip")[0];
-
-      if (proxy && !proxyToRevisionMap[proxy]) proxyToRevisionMap[proxy] = [];
-      if (proxy && revision && proxyToRevisionMap[proxy])
-        proxyToRevisionMap[proxy].push(revision);
-    });
-
-    return proxyToRevisionMap;
-  } catch (error) {
-    console.error(error.message);
-  }
-};
-
-const uploadFileFromLocalBackupToCloudStorage = async (
-  proxy,
-  revision,
-  filename,
-  bucket
-) => {
-  try {
-    await storage.bucket(bucket).upload(`./backups/${filename}`, {
-      destination: `Proxy/${proxy}/revision ${revision}/${filename}`,
-    });
-
-    console.log(
-      `${filename} uploaded to ${bucket}/Proxy/${proxy}/revision ${revision}/ `
-    );
-  } catch (error) {
-    console.error(error.message);
-  }
-};
-
 ///////////////////////////Shared Flows////////////////////////////////////////////////////////
 const downloadRevisionForSharedFlow = async (
   sf,
@@ -213,10 +147,10 @@ const downloadRevisionForSharedFlow = async (
         responseType: "arraybuffer",
       }
     );
-    console.log(`Downloaded shared flow- ${sf} with revision- ${revision}`);
+    logSuccess(`Downloaded shared flow- ${sf} with revision- ${revision}`);
     return response.data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -231,16 +165,16 @@ const saveSharedFlowRevisionLocally = async (
   if (!fs.existsSync(`${localBackUpPath}/${sf}`)) {
     fs.mkdir(path.join(localBackUpPath, sf), (err) => {
       if (err) {
-        return console.error(err);
+        return logError(err);
       }
-      console.log(`Directory ${sf} created successfully!`);
+      logSuccess(`Directory ${sf} created successfully!`);
       fs.writeFile(
         `${localBackUpPath}/${sf}/${fileName}`,
         fileData,
         async (err) => {
           if (err) throw err;
 
-          console.log(
+          logSuccess(
             `file ${fileName} saved to ${localBackUpPath} successfully`
           );
         }
@@ -253,9 +187,7 @@ const saveSharedFlowRevisionLocally = async (
       async (err) => {
         if (err) throw err;
 
-        console.log(
-          `file ${fileName} saved to ${localBackUpPath} successfully`
-        );
+        logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
       }
     );
   }
@@ -270,7 +202,7 @@ const getRevisionsForSharedFlowFromApigee = async (orgName, sf, options) => {
 
     return response.data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -284,7 +216,7 @@ const getListOfAllSharedFlowsFromApigee = async (orgName, options) => {
     if (!data.sharedFlows) return [];
     return data.sharedFlows.map((proxy) => proxy.name);
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -332,7 +264,7 @@ const getListOfApiProductsFromApigee = async (orgName, options) => {
 
     return data.apiProduct.map((ap) => ap.name);
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -349,7 +281,7 @@ const getApiProductConfigFromApigee = async (
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -360,7 +292,7 @@ const saveApiProductLocally = (localBackUpPath, fileName, fileData) => {
   fs.writeFile(`${localBackUpPath}/${fileName}`, fileData, async (err) => {
     if (err) throw err;
 
-    console.log(`file ${fileName} saved to ${localBackUpPath} successfully`);
+    logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
   });
 };
 
@@ -375,7 +307,7 @@ const getListOfDevAppsFromApigee = async (orgName, devEmail, options) => {
     if (!data.app) return [];
     return data.app.map((a) => a.appId);
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -388,7 +320,7 @@ const getDevAppConfigFromApigee = async (orgName, devEmail, appId, options) => {
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -399,7 +331,7 @@ const saveDevAppLocally = (localBackUpPath, fileName, fileData) => {
   fs.writeFile(`${localBackUpPath}/${fileName}`, fileData, async (err) => {
     if (err) throw err;
 
-    console.log(`file ${fileName} saved to ${localBackUpPath} successfully`);
+    logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
   });
 };
 
@@ -415,7 +347,7 @@ const getListOfDevsFromApigee = async (orgName, options) => {
 
     return data.developer.map((d) => d.email);
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -428,7 +360,7 @@ const getDevConfigFromApigee = async (orgName, options, developer) => {
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -439,7 +371,7 @@ const saveDevsLocally = (localBackUpPath, fileName, fileData) => {
   fs.writeFile(`${localBackUpPath}/${fileName}`, fileData, async (err) => {
     if (err) throw err;
 
-    console.log(`file ${fileName} saved to ${localBackUpPath} successfully`);
+    logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
   });
 };
 
@@ -455,7 +387,7 @@ const getListOfTargetServersFromApigee = async (orgName, envName, options) => {
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -473,7 +405,7 @@ const getTargetServerFromApigee = async (
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -484,7 +416,7 @@ const saveTargetServerLocally = (localBackUpPath, fileName, fileData) => {
   fs.writeFile(`${localBackUpPath}/${fileName}`, fileData, async (err) => {
     if (err) throw err;
 
-    console.log(`file ${fileName} saved to ${localBackUpPath} successfully`);
+    logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
   });
 };
 
@@ -500,7 +432,7 @@ const getListOfCustomReportFromApigee = async (orgName, options) => {
 
     return data.qualifier;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -517,7 +449,7 @@ const getCustomReportFromApigee = async (
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -528,7 +460,7 @@ const saveCustomReportLocally = (localBackUpPath, fileName, fileData) => {
   fs.writeFile(`${localBackUpPath}/${fileName}`, fileData, async (err) => {
     if (err) throw err;
 
-    console.log(`file ${fileName} saved to ${localBackUpPath} successfully`);
+    logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
   });
 };
 ///////////////////////////Flow hooks////////////////////////////////////
@@ -543,7 +475,7 @@ const getListOfFlowHooksFromApigee = async (orgName, envName, options) => {
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -556,7 +488,7 @@ const getFlowHooksFromApigee = async (orgName, envName, fhName, options) => {
 
     return data;
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
@@ -567,28 +499,24 @@ const saveFlowHooksLocally = (localBackUpPath, fileName, fileData) => {
   fs.writeFile(`${localBackUpPath}/${fileName}`, fileData, async (err) => {
     if (err) throw err;
 
-    console.log(`file ${fileName} saved to ${localBackUpPath} successfully`);
+    logSuccess(`file ${fileName} saved to ${localBackUpPath} successfully`);
   });
 };
 
-module.exports = {
+export {
   saveTargetServerLocally,
   getTargetServerFromApigee,
   getListOfTargetServersFromApigee,
-
   saveCustomReportLocally,
   getCustomReportFromApigee,
   getListOfCustomReportFromApigee,
-
   saveDevsLocally,
   getDevConfigFromApigee,
   getListOfDevsFromApigee,
   saveDevAppLocally,
-
   getDevAppConfigFromApigee,
   getListOfDevAppsFromApigee,
   saveApiProductLocally,
-
   getApiProductConfigFromApigee,
   getListOfApiProductsFromApigee,
   getSFAndRevisionsStoredLocally,
@@ -596,13 +524,10 @@ module.exports = {
   getRevisionsForSharedFlowFromApigee,
   saveSharedFlowRevisionLocally,
   downloadRevisionForSharedFlow,
-  uploadFileFromLocalBackupToCloudStorage,
-  getProxyAndRevisionsStoredInStorage,
   getProxyAndRevisionsStoredLocally,
   getListOfAllApiProxiesFromApigee,
   getRevisionsForProxyFromApigee,
   downloadRevisionForProxy,
-  uploadToCloudStorage,
   saveProxyRevisionLocally,
   getListOfFlowHooksFromApigee,
   getFlowHooksFromApigee,

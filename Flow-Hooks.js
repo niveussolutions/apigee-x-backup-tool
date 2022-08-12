@@ -5,14 +5,15 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   saveFlowHooksLocally,
   getFlowHooksFromApigee,
   getListOfFlowHooksFromApigee,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logInfo, logError } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "Flow-Hooks";
@@ -20,7 +21,7 @@ const localBackUpPath = config.localBackUp.basePath + "Flow-Hooks";
 const backUpFlowHooks = async () => {
   let envName = process.env.npm_config_envname;
   if (!envName) {
-    console.log("Name of the environment is required to backup flow hooks");
+    logInfo("Name of the environment is required to backup flow hooks");
     return;
   }
 
@@ -48,7 +49,7 @@ const backUpFlowHooks = async () => {
       );
 
       if (!tsJson) {
-        console.log(
+        logError(
           `Something is wrong: Could not get Flow hook ${fh} from Apigee`
         );
         return;
@@ -58,8 +59,8 @@ const backUpFlowHooks = async () => {
       saveFlowHooksLocally(localBackUpPath, fileName, JSON.stringify(tsJson));
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpFlowHooks;
+export default backUpFlowHooks;

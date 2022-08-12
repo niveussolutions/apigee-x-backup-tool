@@ -5,15 +5,15 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   getApiProductConfigFromApigee,
   getListOfApiProductsFromApigee,
-
   saveApiProductLocally,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "api product";
@@ -33,7 +33,7 @@ const backUpApiProduct = async () => {
     );
 
     if (!apiProductsInApigee || !Array.isArray(apiProductsInApigee)) {
-      console.log(
+      logError(
         "Something went wrong: Could not fetch Api products from Apigee"
       );
       return;
@@ -41,7 +41,7 @@ const backUpApiProduct = async () => {
       Array.isArray(apiProductsInApigee) &&
       apiProductsInApigee.length === 0
     ) {
-      console.log("No Api products found");
+      logInfo("No Api products found");
       return;
     }
 
@@ -52,7 +52,7 @@ const backUpApiProduct = async () => {
         product
       );
       if (!apiProduct) {
-        console.log(
+        logError(
           `Something went wrong: Could not fetch Api Product-${product} from Apigee`
         );
         return;
@@ -65,8 +65,8 @@ const backUpApiProduct = async () => {
       );
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpApiProduct;
+export default backUpApiProduct;

@@ -5,14 +5,15 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   saveTargetServerLocally,
   getTargetServerFromApigee,
   getListOfTargetServersFromApigee,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "target-servers";
@@ -20,7 +21,7 @@ const localBackUpPath = config.localBackUp.basePath + "target-servers";
 const backUpTargetServer = async () => {
   let envName = process.env.npm_config_envname;
   if (!envName) {
-    console.log("Name of the environment is required to backup target server");
+    logInfo("Name of the environment is required to backup target server");
     return;
   }
 
@@ -39,7 +40,7 @@ const backUpTargetServer = async () => {
     );
 
     if (!targetServersInApigee || !Array.isArray(targetServersInApigee)) {
-      console.log(
+      logError(
         "Something went wrong: Could not fetch target servers from Apigee"
       );
       return;
@@ -54,7 +55,7 @@ const backUpTargetServer = async () => {
       );
 
       if (!tsJson) {
-        console.log(
+        logError(
           `Something went wrong: Could not get target server ${ts} from Apigee`
         );
         return;
@@ -68,8 +69,8 @@ const backUpTargetServer = async () => {
       );
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpTargetServer;
+export default backUpTargetServer;
