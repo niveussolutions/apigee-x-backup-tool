@@ -41,23 +41,21 @@ const backUpDev = async () => {
       return;
     }
 
-    await Promise.all(
-      devsInApigee.map(async (dev) => {
-        const devJson = await getDevConfigFromApigee(
-          organizationName,
-          options,
-          dev
+    devsInApigee.map(async (dev) => {
+      const devJson = await getDevConfigFromApigee(
+        organizationName,
+        options,
+        dev
+      );
+      if (!devJson) {
+        console.log(
+          `Something went wrong: Could not fetch developer ${dev} from Apigee`
         );
-        if (!devJson) {
-          console.log(
-            `Something went wrong: Could not fetch developer ${dev} from Apigee`
-          );
-          return;
-        }
-        const fileName = `${devJson.email}.json`;
-        saveDevsLocally(localBackUpPath, fileName, JSON.stringify(devJson));
-      })
-    );
+        return;
+      }
+      const fileName = `${devJson.email}.json`;
+      saveDevsLocally(localBackUpPath, fileName, JSON.stringify(devJson));
+    });
   } catch (error) {
     console.error(error.message);
   }

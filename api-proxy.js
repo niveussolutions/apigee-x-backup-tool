@@ -51,77 +51,71 @@ const backUpApiProxy = async () => {
       localBackUpPath + "api proxies"
     );
 
-    await Promise.all(
-      proxiesFromApigee.map(async (proxy) => {
-        try {
-          const revisions = await getRevisionsForProxyFromApigee(
-            organizationName,
-            proxy,
-            options
+    proxiesFromApigee.map(async (proxy) => {
+      try {
+        const revisions = await getRevisionsForProxyFromApigee(
+          organizationName,
+          proxy,
+          options
+        );
+
+        if (!revisions || !Array.isArray(revisions)) {
+          console.log(
+            `Something is wrong: Cannot fetch revisions for ${proxy} from apigee`
           );
-
-          if (!revisions || !Array.isArray(revisions)) {
-            console.log(
-              `Something is wrong: Cannot fetch revisions for ${proxy} from apigee`
-            );
-            return;
-          }
-
-          await Promise.all(
-            revisions.map(async (revision) => {
-              try {
-                let isBackedUpInLocally = backedUpProxiesLocally[proxy]
-                  ? backedUpProxiesLocally[proxy].includes(revision)
-                  : false;
-
-                if (isBackedUpInLocally) {
-                  console.log(
-                    `proxy ${proxy} with revision ${revision} is already backed up `
-                  );
-                  return;
-                } else if (isBackedUpInLocally) {
-                  console.log(
-                    `proxy ${proxy} with revision ${revision} is already backed up locally`
-                  );
-                }
-
-                const data = await downloadRevisionForProxy(
-                  proxy,
-                  revision,
-                  organizationName,
-                  options.headers.Authorization
-                );
-
-                if (!data) {
-                  console.log(
-                    `Something went wrong: Could not fetch the revision ${revision} for proxy ${proxy}`
-                  );
-                  return;
-                }
-
-                const fileName = `${proxy}-revision-${revision}.zip`;
-
-                if (!isBackedUpInLocally) {
-                  await saveProxyRevisionLocally(
-                    localBackUpPath + "api proxies",
-                    fileName,
-                    data,
-                    proxy,
-                    revision
-                  );
-                }
-              } catch (error) {
-                console.error(error.message);
-                Promise.reject();
-              }
-            })
-          );
-        } catch (error) {
-          console.error(error.message);
-          Promise.reject();
+          return;
         }
-      })
-    );
+
+        revisions.map(async (revision) => {
+          try {
+            let isBackedUpInLocally = backedUpProxiesLocally[proxy]
+              ? backedUpProxiesLocally[proxy].includes(revision)
+              : false;
+
+            if (isBackedUpInLocally) {
+              console.log(
+                `proxy ${proxy} with revision ${revision} is already backed up `
+              );
+              return;
+            } else if (isBackedUpInLocally) {
+              console.log(
+                `proxy ${proxy} with revision ${revision} is already backed up locally`
+              );
+            }
+
+            const data = await downloadRevisionForProxy(
+              proxy,
+              revision,
+              organizationName,
+              options.headers.Authorization
+            );
+
+            if (!data) {
+              console.log(
+                `Something went wrong: Could not fetch the revision ${revision} for proxy ${proxy}`
+              );
+              return;
+            }
+
+            const fileName = `${proxy}-revision-${revision}.zip`;
+
+            if (!isBackedUpInLocally) {
+              await saveProxyRevisionLocally(
+                localBackUpPath + "api proxies",
+                fileName,
+                data,
+                proxy,
+                revision
+              );
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        });
+      } catch (error) {
+        console.error(error.message);
+      }
+    });
   } catch (error) {
     console.error(error.message);
   }

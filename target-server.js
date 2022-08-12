@@ -45,30 +45,28 @@ const backUpTargetServer = async () => {
       return;
     }
 
-    await Promise.all(
-      targetServersInApigee.map(async (ts) => {
-        const tsJson = await getTargetServerFromApigee(
-          organizationName,
-          envName,
-          ts,
-          options
-        );
+    targetServersInApigee.map(async (ts) => {
+      const tsJson = await getTargetServerFromApigee(
+        organizationName,
+        envName,
+        ts,
+        options
+      );
 
-        if (!tsJson) {
-          console.log(
-            `Something went wrong: Could not get target server ${ts} from Apigee`
-          );
-          return;
-        }
-
-        const fileName = `${tsJson.name}-${envName}.json`;
-        saveTargetServerLocally(
-          localBackUpPath,
-          fileName,
-          JSON.stringify(tsJson)
+      if (!tsJson) {
+        console.log(
+          `Something went wrong: Could not get target server ${ts} from Apigee`
         );
-      })
-    );
+        return;
+      }
+
+      const fileName = `${tsJson.name}-${envName}.json`;
+      saveTargetServerLocally(
+        localBackUpPath,
+        fileName,
+        JSON.stringify(tsJson)
+      );
+    });
   } catch (error) {
     console.error(error.message);
   }
