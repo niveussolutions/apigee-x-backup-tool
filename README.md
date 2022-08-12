@@ -2,7 +2,7 @@
 
 **The automation script can backup Apigee Api Proxies, Shared flows, Api Products etc**
 
-> NOTE: We can extend the script to backup to cloud storage
+> NOTE: The Script is tested and works perfectly on Linux(ubuntu)
 
 ### Pre-requisites
 
