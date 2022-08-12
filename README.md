@@ -8,17 +8,17 @@
 
 1. Download [gcloud](https://cloud.google.com/sdk/docs/install)
 
-2. run `gcloud auth application-default login`
+2. Install [nodejs](https://nodejs.org/)
 
 3. set gcp project `gcloud config set project <project_id>`
 
-4. Install [nodejs](https://nodejs.org/)
+4. run `gcloud auth login` or `gcloud auth application-default login`
 
-5. Clone the project
+5. Clone this repository
 
-6. run `npm install`
+6. run `npm install` to install all the dependencies, from inside the respository where package.json file is located
 
-7. create a directory where you want to backup all proxies
+7. Create a directory where you want to backup all apigee objects
 
 8. **update organization(apigee organization- you will find this in the top left dropdown in the apigee console/ project id in the GCP console ), local backup basepath (path of the backup folder , add "/" at the end of the path) in config.js**
 

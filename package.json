@@ -1,10 +1,12 @@
 {
   "name": "sample-pubsub",
   "version": "0.0.1",
+  "type": "module",
   "dependencies": {
     "@google-cloud/pubsub": "^0.18.0",
     "@google-cloud/storage": "^5.18.2",
     "axios": "^0.26.1",
+    "chalk": "^5.0.1",
     "google-auth-library": "^7.14.0"
   },
   "scripts": {
@@ -15,7 +17,7 @@
     "backupDev": "node -e 'require(\"./developers.js\")()'",
     "backupDevApp": "node -e 'require(\"./dev-app.js\")()'",
     "backupTargetServer": "node -e 'require(\"./target-server.js\")()'",
-    "backUpCustomReports":"node -e 'require(\"./Custom-report.js\")()'",
-    "backUpFlowHooks":"node -e 'require(\"./Flow-Hooks.js\")()'"
+    "backUpCustomReports": "node -e 'require(\"./Custom-report.js\")()'",
+    "backUpFlowHooks": "node -e 'require(\"./Flow-Hooks.js\")()'"
   }
 }

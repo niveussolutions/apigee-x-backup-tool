@@ -5,17 +5,19 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
+
 const auth = new GoogleAuth();
-const {
+import {
   getProxyAndRevisionsStoredLocally,
   getListOfAllApiProxiesFromApigee,
   getRevisionsForProxyFromApigee,
   downloadRevisionForProxy,
-
   saveProxyRevisionLocally,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath;
@@ -35,7 +37,7 @@ const backUpApiProxy = async () => {
     );
 
     if (!proxiesFromApigee || !Array.isArray(proxiesFromApigee)) {
-      console.log(
+      logError(
         "Something went wrong: Could not fetch  Api proxies from Apigee"
       );
       return;
@@ -43,7 +45,7 @@ const backUpApiProxy = async () => {
       Array.isArray(proxiesFromApigee) &&
       proxiesFromApigee.length === 0
     ) {
-      console.log("No Api proxies found");
+      logInfo("No Api proxies found");
       return;
     }
 
@@ -60,7 +62,7 @@ const backUpApiProxy = async () => {
         );
 
         if (!revisions || !Array.isArray(revisions)) {
-          console.log(
+          logError(
             `Something is wrong: Cannot fetch revisions for ${proxy} from apigee`
           );
           return;
@@ -73,12 +75,12 @@ const backUpApiProxy = async () => {
               : false;
 
             if (isBackedUpInLocally) {
-              console.log(
+              logInfo(
                 `proxy ${proxy} with revision ${revision} is already backed up `
               );
               return;
             } else if (isBackedUpInLocally) {
-              console.log(
+              logInfo(
                 `proxy ${proxy} with revision ${revision} is already backed up locally`
               );
             }
@@ -91,7 +93,7 @@ const backUpApiProxy = async () => {
             );
 
             if (!data) {
-              console.log(
+              logError(
                 `Something went wrong: Could not fetch the revision ${revision} for proxy ${proxy}`
               );
               return;
@@ -109,16 +111,16 @@ const backUpApiProxy = async () => {
               );
             }
           } catch (error) {
-            console.error(error.message);
+            logError(error.message);
           }
         });
       } catch (error) {
-        console.error(error.message);
+        logError(error.message);
       }
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpApiProxy;
+export default backUpApiProxy;

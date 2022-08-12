@@ -5,16 +5,17 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   getSFAndRevisionsStoredLocally,
   getListOfAllSharedFlowsFromApigee,
   getRevisionsForSharedFlowFromApigee,
   saveSharedFlowRevisionLocally,
   downloadRevisionForSharedFlow,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath;
@@ -34,12 +35,12 @@ const backUpSharedFlow = async () => {
     );
 
     if (!sfFromApigee || !Array.isArray(sfFromApigee)) {
-      console.log(
+      logError(
         `Something went wrong: Could not fetch Shared flows from Apigee`
       );
       return;
     } else if (Array.isArray(sfFromApigee) && sfFromApigee.length === 0) {
-      console.log(`No Shared Flows Found`);
+      logInfo(`No Shared Flows Found`);
       return;
     }
 
@@ -55,7 +56,7 @@ const backUpSharedFlow = async () => {
           options
         );
         if (!revisions || !Array.isArray(revisions)) {
-          console.log(
+          logError(
             `Something is wrong: Cannot fetch revisions for ${sf} from apigee`
           );
           return;
@@ -68,7 +69,7 @@ const backUpSharedFlow = async () => {
               : false;
 
             if (isBackedUpInLocally) {
-              console.log(
+              logInfo(
                 `shared flow ${sf} with revision ${revision} is already backed up `
               );
               return;
@@ -82,7 +83,7 @@ const backUpSharedFlow = async () => {
             );
 
             if (!data) {
-              console.log(
+              logError(
                 `Something went wrong: Could not fetch the revision ${revision} for shared flow ${proxy}`
               );
               return;
@@ -100,18 +101,18 @@ const backUpSharedFlow = async () => {
               );
             }
           } catch (error) {
-            console.error(error.message);
+            logError(error.message);
             Promise.reject();
           }
         });
       } catch (error) {
-        console.error(error.message);
+        logError(error.message);
         Promise.reject();
       }
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpSharedFlow;
+export default backUpSharedFlow;

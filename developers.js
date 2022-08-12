@@ -5,14 +5,15 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   saveDevsLocally,
   getDevConfigFromApigee,
   getListOfDevsFromApigee,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logInfo, logError } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "developers";
@@ -32,12 +33,10 @@ const backUpDev = async () => {
     );
 
     if (!devsInApigee || !Array.isArray(devsInApigee)) {
-      console.log(
-        "Something went wrong: Could not fetch developers from Apigee"
-      );
+      logError("Something went wrong: Could not fetch developers from Apigee");
       return;
     } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
-      console.log("No developers found");
+      logInfo("No developers found");
       return;
     }
 
@@ -48,7 +47,7 @@ const backUpDev = async () => {
         dev
       );
       if (!devJson) {
-        console.log(
+        logError(
           `Something went wrong: Could not fetch developer ${dev} from Apigee`
         );
         return;
@@ -57,8 +56,8 @@ const backUpDev = async () => {
       saveDevsLocally(localBackUpPath, fileName, JSON.stringify(devJson));
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpDev;
+export default backUpDev;

@@ -5,14 +5,15 @@
  *
  */
 
-const { GoogleAuth } = require("google-auth-library");
+import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
-const {
+import {
   saveCustomReportLocally,
   getCustomReportFromApigee,
   getListOfCustomReportFromApigee,
-} = require("./utils.js");
-const config = require("./config.js");
+} from "./utils.js";
+import config from "./config.js";
+import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "Custom Reports";
@@ -31,7 +32,7 @@ const backUpCustomReports = async () => {
       options
     );
     if (!reportsInApigee || !Array.isArray(reportsInApigee)) {
-      console.log(
+      logError(
         "Something went wrong: Could not fetch custom reports from Apigee"
       );
       return;
@@ -43,8 +44,8 @@ const backUpCustomReports = async () => {
       saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(cs));
     });
   } catch (error) {
-    console.error(error.message);
+    logError(error.message);
   }
 };
 
-module.exports = backUpCustomReports;
+export default backUpCustomReports;
