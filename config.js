@@ -1,6 +1,6 @@
-module.exports = {
-  organization: "org-name",
+export default {
+  organization: "apigee-organization",
   localBackUp: {
-    basePath: "/local/backup/path",
+    basePath: "/example/local/backup/path/",
   },
 };
