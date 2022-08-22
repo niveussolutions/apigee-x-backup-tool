@@ -24,22 +24,6 @@
 
 ### Start Backup
 
-run `npm run backupApiProxy` to backup all Api Proxy revisions
-
-run `npm run backupSharedFlow` to backup all Shared Flow revisions
-
-run `npm run backupApiProduct` to backup all Api Products
-
-run `npm run backupDevApp` to backup all developer apps
-
-run `npm run backupDev` to backup all developers
-
-run `npm run backupTargetServer --envname=name-of-environment` to backup all target server, pass the name of the environment as argument to the command as shown here
-
-run `npm run backUpFlowHooks --envname=name-of-environment` to backup all Flow hook
-
-run `npm run backUpCustomReports` to backup all Custom reports
-
 run `npm run backupAll --envname=name-of-environment` to backup Api Proxy, Api product,developer apps , developers, target server
 
 > NOTE: Pass `envname` argument as shown above, if you want to backup target server
