@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
 import axios from "axios";
-import { Storage } from "@google-cloud/storage";
-const storage = new Storage();
+
 import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 ////////////api proxy/////////////////////////////////////////////////////////////

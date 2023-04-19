@@ -3,8 +3,6 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
-    "@google-cloud/pubsub": "^0.18.0",
-    "@google-cloud/storage": "^5.18.2",
     "axios": "^0.26.1",
     "chalk": "^5.0.1",
     "google-auth-library": "^7.14.0"
