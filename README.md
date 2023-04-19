@@ -24,7 +24,21 @@
 
 ### Start Backup
 
-run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server
+run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server etc
+
+run `npm run backupApiProxy` to backup Api Proxies
+
+run `npm run backupSharedFlow` to backup Shared Flows
+
+run `npm run backupApiProduct` to backup Api Products
+
+run `npm run backupDev` to backup Developers
+
+run `npm run backupDevApp` to backup Developer App
+
+run `npm run backupCustomReports` to backup Custom Reports
+
+
 
 **Tested and working on Nodejs 16 and ubuntu machine**
 
