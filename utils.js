@@ -513,6 +513,7 @@ const listEnvironments = async (orgName, options) => {
     return data;
   } catch (error) {
     logError(error.message);
+    return [];
   }
 };
 
