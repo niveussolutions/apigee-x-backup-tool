@@ -1,14 +1,19 @@
 {
   "name": "sample-pubsub",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
+  "bin": {
+    "apigee-backup-tool": "./cli.js"
+  },
   "dependencies": {
     "axios": "^0.26.1",
-    "chalk": "^5.0.1",
+    "chalk": "^5.2.0",
+    "commander": "^10.0.1",
+    "conf": "^11.0.1",
     "google-auth-library": "^7.14.0"
   },
   "scripts": {
-    "backupAll": "node index.js",
+    "backupAll": "node -e 'import(\"./index.js\").then(async loadedModule => await loadedModule.default())'",
     "backupApiProxy": "node -e 'import(\"./api-proxy.js\").then(async loadedModule => await loadedModule.default())'",
     "backupSharedFlow": "node -e 'import(\"./shared-flow.js\").then(async loadedModule => await loadedModule.default())'",
     "backupApiProduct": "node -e 'import(\"./api-product.js\").then(async loadedModule => await loadedModule.default())'",

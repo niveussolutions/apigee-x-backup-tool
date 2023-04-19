@@ -19,6 +19,7 @@ const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "target-servers";
 
 const backUpTargetServer = async (envName) => {
+  console.log(envName);
   if (!envName) {
     logInfo("Name of the environment is required to backup target server");
     return;

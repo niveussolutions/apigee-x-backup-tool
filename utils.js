@@ -517,6 +517,12 @@ const listEnvironments = async (orgName, options) => {
   }
 };
 
+////////////////cli///////////////////////////
+import { exec } from "child_process";
+const gcloudLogin = () => {
+  exec("gcloud auth application-default login");
+};
+
 export {
   saveTargetServerLocally,
   getTargetServerFromApigee,
@@ -547,4 +553,5 @@ export {
   getFlowHooksFromApigee,
   saveFlowHooksLocally,
   listEnvironments,
+  gcloudLogin,
 };

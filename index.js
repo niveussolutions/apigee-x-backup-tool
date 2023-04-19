@@ -39,4 +39,4 @@ const backUpAll = async () => {
   });
 };
 
-backUpAll();
+export default backUpAll;
