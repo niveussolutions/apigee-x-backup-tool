@@ -12,6 +12,41 @@ import backUpDevApp from "./dev-app.js";
 import backUpFlowHooks from "./Flow-Hooks.js";
 import backUpCustomReports from "./Custom-report.js";
 import backUpTargetServer from "./target-server.js";
+import { logError } from "./chalk.js";
+
+function backup(apigeeResourceType) {
+  switch (apigeeResourceType) {
+    case "all":
+      backUpAll();
+      break;
+    case "api-proxy":
+      backUpApiProxy();
+      break;
+    case "shared-flow":
+      backUpSharedFlow();
+      break;
+    case "api-product":
+      backUpApiProduct();
+      break;
+    case "developer":
+      backUpDev();
+      break;
+    case "developer-app":
+      backUpDevApp();
+      break;
+    case "target-server":
+      backUpTargetServer(this.opts().envName);
+      break;
+    case "flow-hook":
+      backUpFlowHooks(this.opts().envName);
+      break;
+    case "custom-report":
+      backUpCustomReports();
+      break;
+    default:
+      console.log("illegal apigee resource type");
+  }
+}
 
 program
   .name("apigee-backup-tool")
@@ -19,6 +54,38 @@ program
     "CLI tool to backup  apigee resources like api proxies, shared flows, Api products etc"
   )
   .version("1.0.0");
+
+program
+  .command("backup")
+  .description("Backup a specific apigee resource")
+  .addHelpText(
+    "after",
+    `
+    this command takes a <type> argument which can be one of the following Apigee resource
+    1. all
+    2. api-proxy
+    3. shared-flow,
+    4. developer,
+    5. developer-app
+    6. custom-report
+    7. api-product,
+    8. flow-hook,
+    9. target-server
+
+    Ex: apigee-backup-tool backup all
+        apigee-backup-tool backup api-proxy
+        apigee-backup-tool backup shared-flow
+        apigee-backup-tool backup target-server --envName <environment-name>
+        apigee-backup-tool backup flow-hook --envName <environment-name>
+  `
+  )
+  .argument("<type>", "Apigee resource Type")
+  .option(
+    "-e, --envName",
+    "Name of the environment. Applicable to type target-server and flow-hook",
+    "None"
+  )
+  .action(backup);
 
 program
   .command("login")
@@ -74,7 +141,9 @@ program
   .command("flow-hook")
   .requiredOption("-e, --envName <string>", "Name of the environment")
   .description("Backup all Flow Hooks")
-  .action((options) => backUpFlowHooks(options.envName));
+  .action(function () {
+    return backUpFlowHooks(this.opts().envName);
+  });
 
 program
   .command("custom-report")
@@ -85,6 +154,8 @@ program
   .command("target-server")
   .description("Backup all Target Server")
   .requiredOption("-e, --envName <string>", "Name of the environment")
-  .action((options) => backUpTargetServer(options.envName));
+  .action(function () {
+    backUpTargetServer(this.opts().envName);
+  });
 
 program.parse();
