@@ -16,6 +16,8 @@
     "backupApiProduct": "node -e 'import(\"./api-product.js\").then(async loadedModule => await loadedModule.default())'",
     "backupDev": "node -e 'import(\"./developers.js\").then(async loadedModule => await loadedModule.default())'",
     "backupDevApp": "node -e 'import(\"./dev-app.js\").then(async loadedModule => await loadedModule.default())'",
-    "backupCustomReports": "node -e 'import(\"./Custom-report.js\").then(async loadedModule => await loadedModule.default())'"
+    "backupCustomReports": "node -e 'import(\"./Custom-report.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupTargetServer": "node -e 'import(\"./target-server.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_envname))'",
+    "backupFlowHooks": "node -e 'import(\"./Flow-Hooks.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_envname))'"
   }
 }
