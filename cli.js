@@ -72,8 +72,9 @@ program
 
 program
   .command("flow-hook")
+  .requiredOption("-e, --envName <string>", "Name of the environment")
   .description("Backup all Flow Hooks")
-  .action(backUpFlowHooks);
+  .action((options) => backUpFlowHooks(options.envName));
 
 program
   .command("custom-report")
@@ -83,7 +84,7 @@ program
 program
   .command("target-server")
   .description("Backup all Target Server")
-  .option("-e", "--envName <string>", "Name of the environment")
-  .action((options) => backUpTargetServer(options));
+  .requiredOption("-e, --envName <string>", "Name of the environment")
+  .action((options) => backUpTargetServer(options.envName));
 
 program.parse();
