@@ -2,7 +2,7 @@
 
 **The automation script can backup Apigee Api Proxies, Shared flows, Api Products etc**
 
-> NOTE: The Script is tested and works perfectly on Linux(ubuntu)
+> NOTE: The Script is tested and works perfectly on Linux(ubuntu) and nodejs version 16.19.1
 
 ### Pre-requisites
 
@@ -38,8 +38,16 @@ run `npm run backupDevApp` to backup Developer App
 
 run `npm run backupCustomReports` to backup Custom Reports
 
+run `npm run backupFlowHooks --envName=env-name` to backup Flow Hooks for a specific environment
+
+run `npm run backupTargetServer --envName=env-name` to backup Custom Reports for a specific environment
 
 
-**Tested and working on Nodejs 16 and ubuntu machine**
+
+### Switch to different organization
+
+1. Login to google cloud using
+ `gcloud auth application-default login`
+2. Update organization name and backup folder path in config.js file
 
 
