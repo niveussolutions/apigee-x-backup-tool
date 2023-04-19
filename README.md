@@ -24,6 +24,6 @@
 
 ### Start Backup
 
-run `npm run backupAll --envname=name-of-environment` to backup Api Proxy, Api product,developer apps , developers, target server
+run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server
 
-> NOTE: Pass `envname` argument as shown above, if you want to backup target server
+
