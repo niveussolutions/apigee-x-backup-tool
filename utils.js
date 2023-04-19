@@ -503,6 +503,20 @@ const saveFlowHooksLocally = (localBackUpPath, fileName, fileData) => {
   });
 };
 
+/////////////////////Environments///////////////////////////////////////////////////
+
+const listEnvironments = async (orgName, options) => {
+  try {
+    const url = `https://apigee.googleapis.com/v1/organizations/${orgName}/environments`;
+
+    const { data } = await axios.get(url, options);
+
+    return data;
+  } catch (error) {
+    logError(error.message);
+  }
+};
+
 export {
   saveTargetServerLocally,
   getTargetServerFromApigee,
@@ -532,4 +546,5 @@ export {
   getListOfFlowHooksFromApigee,
   getFlowHooksFromApigee,
   saveFlowHooksLocally,
+  listEnvironments,
 };
