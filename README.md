@@ -4,7 +4,7 @@
 
 > NOTE: The Script is tested and works perfectly on Linux(ubuntu) and nodejs version 16.19.1
 
-### Pre-requisites
+### Get Started
 
 1. Download [gcloud](https://cloud.google.com/sdk/docs/install)
 
