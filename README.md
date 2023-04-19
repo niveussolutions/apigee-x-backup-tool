@@ -26,4 +26,6 @@
 
 run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server
 
+**Tested and working on Nodejs 16 and ubuntu machine**
+
 
