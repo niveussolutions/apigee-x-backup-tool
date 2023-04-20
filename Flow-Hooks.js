@@ -11,12 +11,14 @@ import {
   saveFlowHooksLocally,
   getFlowHooksFromApigee,
   getListOfFlowHooksFromApigee,
+  getConfig,
 } from "./utils.js";
-import config from "./config.js";
+
 import { logInfo, logError } from "./chalk.js";
 
+const config = getConfig();
 const organizationName = config.organization;
-const localBackUpPath = config.localBackUp.basePath + "Flow-Hooks";
+const localBackUpPath = config.backupFolderPath + "Flow-Hooks";
 
 const backUpFlowHooks = async (envName) => {
   if (!envName) {

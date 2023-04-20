@@ -523,7 +523,15 @@ const gcloudLogin = () => {
   exec("gcloud auth application-default login");
 };
 
+////////////////config////////////////////////
+import { readFileSync } from "fs";
+const getConfig = () => {
+  const data = readFileSync("./config.json");
+  return JSON.parse(data);
+};
+
 export {
+  getConfig,
   saveTargetServerLocally,
   getTargetServerFromApigee,
   getListOfTargetServersFromApigee,

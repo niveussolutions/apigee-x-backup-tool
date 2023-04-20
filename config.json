@@ -1,0 +1,5 @@
+{
+  "organization": "organization-name",
+
+  "backupFolderPath": "/home/example/backup/folder/path/"
+}

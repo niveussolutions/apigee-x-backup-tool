@@ -9,14 +9,16 @@ import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
 import {
   getApiProductConfigFromApigee,
+  getConfig,
   getListOfApiProductsFromApigee,
   saveApiProductLocally,
 } from "./utils.js";
-import config from "./config.js";
+
 import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
+const config = getConfig();
 const organizationName = config.organization;
-const localBackUpPath = config.localBackUp.basePath + "api product";
+const localBackUpPath = config.backupFolderPath + "api product";
 
 const backUpApiProduct = async () => {
   try {

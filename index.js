@@ -6,12 +6,12 @@ import backUpDevApp from "./dev-app.js";
 import backUpTargetServer from "./target-server.js";
 import backUpCustomReports from "./Custom-report.js";
 import backupFlowHooks from "./Flow-Hooks.js";
-import { listEnvironments } from "./utils.js";
-
-import config from "./config.js";
+import { getConfig, listEnvironments } from "./utils.js";
 
 import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
+
+const config = getConfig();
 
 const organizationName = config.organization;
 
