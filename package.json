@@ -3,21 +3,19 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
-    "@google-cloud/pubsub": "^0.18.0",
-    "@google-cloud/storage": "^5.18.2",
     "axios": "^0.26.1",
     "chalk": "^5.0.1",
     "google-auth-library": "^7.14.0"
   },
   "scripts": {
     "backupAll": "node index.js",
-    "backupApiProxy": "node -e 'require(\"./api-proxy.js\")()'",
-    "backupSharedFlow": "node -e 'require(\"./shared-flow.js\")()'",
-    "backupApiProduct": "node -e 'require(\"./api-product.js\")()'",
-    "backupDev": "node -e 'require(\"./developers.js\")()'",
-    "backupDevApp": "node -e 'require(\"./dev-app.js\")()'",
-    "backupTargetServer": "node -e 'require(\"./target-server.js\")()'",
-    "backUpCustomReports": "node -e 'require(\"./Custom-report.js\")()'",
-    "backUpFlowHooks": "node -e 'require(\"./Flow-Hooks.js\")()'"
+    "backupApiProxy": "node -e 'import(\"./api-proxy.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupSharedFlow": "node -e 'import(\"./shared-flow.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupApiProduct": "node -e 'import(\"./api-product.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupDev": "node -e 'import(\"./developers.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupDevApp": "node -e 'import(\"./dev-app.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupCustomReports": "node -e 'import(\"./Custom-report.js\").then(async loadedModule => await loadedModule.default())'",
+    "backupTargetServer": "node -e 'import(\"./target-server.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_envname))'",
+    "backupFlowHooks": "node -e 'import(\"./Flow-Hooks.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_envname))'"
   }
 }

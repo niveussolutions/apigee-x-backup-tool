@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
 import axios from "axios";
-import { Storage } from "@google-cloud/storage";
-const storage = new Storage();
+
 import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
 ////////////api proxy/////////////////////////////////////////////////////////////
@@ -503,6 +502,21 @@ const saveFlowHooksLocally = (localBackUpPath, fileName, fileData) => {
   });
 };
 
+/////////////////////Environments///////////////////////////////////////////////////
+
+const listEnvironments = async (orgName, options) => {
+  try {
+    const url = `https://apigee.googleapis.com/v1/organizations/${orgName}/environments`;
+
+    const { data } = await axios.get(url, options);
+
+    return data;
+  } catch (error) {
+    logError(error.message);
+    return [];
+  }
+};
+
 export {
   saveTargetServerLocally,
   getTargetServerFromApigee,
@@ -532,4 +546,5 @@ export {
   getListOfFlowHooksFromApigee,
   getFlowHooksFromApigee,
   saveFlowHooksLocally,
+  listEnvironments,
 };

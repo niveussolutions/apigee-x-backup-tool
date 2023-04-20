@@ -18,8 +18,7 @@ import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "target-servers";
 
-const backUpTargetServer = async () => {
-  let envName = process.env.npm_config_envname;
+const backUpTargetServer = async (envName) => {
   if (!envName) {
     logInfo("Name of the environment is required to backup target server");
     return;

@@ -18,8 +18,7 @@ import { logInfo, logError } from "./chalk.js";
 const organizationName = config.organization;
 const localBackUpPath = config.localBackUp.basePath + "Flow-Hooks";
 
-const backUpFlowHooks = async () => {
-  let envName = process.env.npm_config_envname;
+const backUpFlowHooks = async (envName) => {
   if (!envName) {
     logInfo("Name of the environment is required to backup flow hooks");
     return;
