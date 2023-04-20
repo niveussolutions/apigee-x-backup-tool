@@ -524,10 +524,9 @@ const gcloudLogin = () => {
 };
 
 ////////////////config////////////////////////
-import { readFileSync } from "fs";
+import config from "./config.json" assert { type: "json" };
 const getConfig = () => {
-  const data = readFileSync("./config.json");
-  return JSON.parse(data);
+  return config;
 };
 
 export {
