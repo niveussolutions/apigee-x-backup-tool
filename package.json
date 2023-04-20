@@ -1,5 +1,5 @@
 {
-  "name": "sample-pubsub",
+  "name": "apigee-backup-tool",
   "version": "1.0.0",
   "type": "module",
   "bin": {
