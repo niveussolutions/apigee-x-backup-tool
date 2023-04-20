@@ -529,7 +529,22 @@ const getConfig = () => {
   return config;
 };
 
+function setConfig() {
+  try {
+    const { orgName, backupFolderPath } = this.opts();
+    const newConfig = {
+      organization: orgName,
+      backupFolderPath,
+    };
+    fs.writeFileSync("./config.json", JSON.stringify(newConfig));
+    logSuccess(`configuration set successfully`);
+  } catch (error) {
+    logError(error.message);
+  }
+}
+
 export {
+  setConfig,
   getConfig,
   saveTargetServerLocally,
   getTargetServerFromApigee,

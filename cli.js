@@ -2,7 +2,7 @@
 
 import { program } from "commander";
 
-import { gcloudLogin } from "./utils.js";
+import { gcloudLogin, setConfig } from "./utils.js";
 import backUpAll from "./index.js";
 import backUpApiProxy from "./api-proxy.js";
 import backUpSharedFlow from "./shared-flow.js";
@@ -54,6 +54,14 @@ program
     "CLI tool to backup  apigee resources like api proxies, shared flows, Api products etc"
   )
   .version("1.0.0");
+
+program
+  .command("config")
+  .argument("<action>", "Config action (set)")
+  .description("configure organization name and backupFolderPath")
+  .requiredOption("-O, --orgName <string>", "Name of the apigee organization")
+  .requiredOption("--backupFolderPath <string>", "Path for the backup folder")
+  .action(setConfig);
 
 program
   .command("backup")
