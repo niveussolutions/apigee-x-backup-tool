@@ -60,7 +60,10 @@ program
   .argument("<action>", "Config action (set)")
   .description("configure organization name and backupFolderPath")
   .requiredOption("-O, --orgName <string>", "Name of the apigee organization")
-  .requiredOption("-F, --backupFolderPath <string>", "Path for the backup folder")
+  .requiredOption(
+    "-F, --backupFolderPath <string>",
+    "Path for the backup folder"
+  )
   .action(setConfig);
 
 program
@@ -89,7 +92,7 @@ program
   )
   .argument("<type>", "Apigee resource Type")
   .option(
-    "-e, --envName",
+    "-e, --envName <string>",
     "Name of the environment. Applicable to type target-server and flow-hook",
     "None"
   )
