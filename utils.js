@@ -435,11 +435,7 @@ const getListOfCustomReportFromApigee = async (orgName, options) => {
   }
 };
 
-const getCustomReportFromApigee = async (
-  orgName,
-  targetServerName,
-  options
-) => {
+const getCustomReportFromApigee = async (orgName, reportName, options) => {
   try {
     const { data } = await axios.get(
       `https://apigee.googleapis.com/v1/organizations/${orgName}/reports/${reportName}`,

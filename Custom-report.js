@@ -21,7 +21,8 @@ const config = getConfig();
 const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "Custom Reports";
 
-const backUpCustomReports = async () => {
+const backUpCustomReports = async (all, crName) => {
+  
   try {
     const authToken = await auth.getAccessToken();
 
@@ -30,22 +31,38 @@ const backUpCustomReports = async () => {
         Authorization: `Bearer ${authToken}`,
       },
     };
-    const reportsInApigee = await getListOfCustomReportFromApigee(
-      organizationName,
-      options
-    );
-    if (!reportsInApigee || !Array.isArray(reportsInApigee)) {
-      logError(
-        "Something went wrong: Could not fetch custom reports from Apigee"
+    if (all) {
+      const reportsInApigee = await getListOfCustomReportFromApigee(
+        organizationName,
+        options
       );
-      return;
-    }
-    reportsInApigee.forEach((cs) => {
-      const fileName = `${cs.displayName
+      if (!reportsInApigee || !Array.isArray(reportsInApigee)) {
+        logError(
+          "Something went wrong: Could not fetch custom reports from Apigee"
+        );
+        return;
+      }
+      reportsInApigee.forEach((cs) => {
+        const fileName = `${cs.displayName
+          .replace(" ", "-")
+          .replace("/", "-")}.json`;
+        saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(cs));
+      });
+    } else if (!all && crName) {
+      const data = await getCustomReportFromApigee(
+        organizationName,
+        crName,
+        options
+      );
+      const fileName = `${data.displayName
         .replace(" ", "-")
         .replace("/", "-")}.json`;
-      saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(cs));
-    });
+      saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(data));
+    } else {
+      throw Error(
+        "specify --name option to backup a specific custom report or specify --all option"
+      );
+    }
   } catch (error) {
     logError(error.message);
   }

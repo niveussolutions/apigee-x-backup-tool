@@ -248,7 +248,11 @@ program
 program
   .command("custom-report")
   .description("Backup all Custom Reports")
-  .action(backUpCustomReports);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "name of the custom report")
+  .action(function () {
+    backUpCustomReports(this.opts().all, this.opts().name);
+  });
 
 program
   .command("target-server")
