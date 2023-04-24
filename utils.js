@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 import path from "path";
 import axios from "axios";
 
@@ -524,25 +524,31 @@ const gcloudLogin = () => {
 };
 
 ////////////////config////////////////////////
-import config from "./config.json" assert { type: "json" };
-const getConfig = () => {
-  return config;
-};
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const configPath = `${__dirname}/config.json`;
 
-function setConfig() {
+const getConfig = () => {
   try {
-    const { orgName, backupFolderPath } = this.opts();
+    const data = readFileSync(configPath);
+    return JSON.parse(data);
+  } catch (error) {
+    logError(error.message);
+    throw error;
+  }
+};
+
+function setConfig(opts) {
+  try {
+    const { orgName, backupFolderPath } = opts;
     const newConfig = {
       organization: orgName,
       backupFolderPath,
     };
 
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-
-    fs.writeFileSync(`${__dirname}/config.json`, JSON.stringify(newConfig));
+    fs.writeFileSync(configPath, JSON.stringify(newConfig));
     logSuccess(`configuration set successfully`);
   } catch (error) {
     logError(error.message);

@@ -21,8 +21,8 @@ const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "target-servers";
 
 const backUpTargetServer = async (envName) => {
-  if (!envName) {
-    logInfo("Name of the environment is required to backup target server");
+  if (!envName || envName === "None") {
+    logError("Name of the environment is required to backup target server");
     return;
   }
 

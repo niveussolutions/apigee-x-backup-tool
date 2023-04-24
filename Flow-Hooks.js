@@ -21,8 +21,8 @@ const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "Flow-Hooks";
 
 const backUpFlowHooks = async (envName) => {
-  if (!envName) {
-    logInfo("Name of the environment is required to backup flow hooks");
+  if (!envName || envName === "None") {
+    logError("Name of the environment is required to backup flow hooks");
     return;
   }
 
