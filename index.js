@@ -28,10 +28,10 @@ const backUpAll = async () => {
 
   await backUpApiProxy(true);
   await backUpSharedFlow(true);
-  await backedUpApiProduct();
-  await backUpDev();
-  await backUpDevApp();
-  await backUpCustomReports();
+  await backedUpApiProduct(true);
+  await backUpDev(true);
+  await backUpDevApp(true);
+  await backUpCustomReports(true);
 
   envs.forEach(async (env) => {
     await backUpTargetServer(env);

@@ -77,13 +77,13 @@ function backup(apigeeResourceType) {
       backUpSharedFlow(all, name, revision);
       break;
     case "api-product":
-      backUpApiProduct();
+      backUpApiProduct(all, name);
       break;
     case "developer":
-      backUpDev();
+      backUpDev(all, name);
       break;
     case "developer-app":
-      backUpDevApp();
+      backUpDevApp(all, name);
       break;
     case "target-server":
       backUpTargetServer(envName);
@@ -92,7 +92,7 @@ function backup(apigeeResourceType) {
       backUpFlowHooks(envName);
       break;
     case "custom-report":
-      backUpCustomReports();
+      backUpCustomReports(all, name);
       break;
     default:
       logError(`illegal apigee resource type - ${apigeeResourceType}`);
@@ -203,7 +203,11 @@ program
 program
   .command("api-product")
   .description("Backup all Api Products")
-  .action(backUpApiProduct);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee shared flow")
+  .action(function () {
+    backUpApiProduct(this.opts().all, this.opts().name);
+  });
 
 program
   .command("developer")

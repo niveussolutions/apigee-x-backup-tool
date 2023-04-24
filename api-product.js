@@ -20,7 +20,7 @@ const config = getConfig();
 const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "api product";
 
-const backUpApiProduct = async () => {
+const backUpApiProduct = async (all, apiProductName) => {
   try {
     const authToken = await auth.getAccessToken();
 
@@ -29,43 +29,67 @@ const backUpApiProduct = async () => {
         Authorization: `Bearer ${authToken}`,
       },
     };
-    const apiProductsInApigee = await getListOfApiProductsFromApigee(
-      organizationName,
-      options
-    );
-
-    if (!apiProductsInApigee || !Array.isArray(apiProductsInApigee)) {
-      logError(
-        "Something went wrong: Could not fetch Api products from Apigee"
+    if (all) {
+      const apiProductsInApigee = await getListOfApiProductsFromApigee(
+        organizationName,
+        options
       );
-      return;
-    } else if (
-      Array.isArray(apiProductsInApigee) &&
-      apiProductsInApigee.length === 0
-    ) {
-      logInfo("No Api products found");
-      return;
-    }
 
-    apiProductsInApigee.map(async (product) => {
+      if (!apiProductsInApigee || !Array.isArray(apiProductsInApigee)) {
+        logError(
+          "Something went wrong: Could not fetch Api products from Apigee"
+        );
+        return;
+      } else if (
+        Array.isArray(apiProductsInApigee) &&
+        apiProductsInApigee.length === 0
+      ) {
+        logInfo("No Api products found");
+        return;
+      }
+
+      apiProductsInApigee.map(async (product) => {
+        const apiProduct = await getApiProductConfigFromApigee(
+          organizationName,
+          options,
+          product
+        );
+        if (!apiProduct) {
+          logError(
+            `Something went wrong: Could not fetch Api Product-${product} from Apigee`
+          );
+          return;
+        }
+        const fileName = `${product}.json`;
+        saveApiProductLocally(
+          localBackUpPath,
+          fileName,
+          JSON.stringify(apiProduct)
+        );
+      });
+    } else if (!all && apiProductName) {
       const apiProduct = await getApiProductConfigFromApigee(
         organizationName,
         options,
-        product
+        apiProductName
       );
       if (!apiProduct) {
         logError(
-          `Something went wrong: Could not fetch Api Product-${product} from Apigee`
+          `Something went wrong: Could not fetch Api Product-${apiProductName} from Apigee`
         );
         return;
       }
-      const fileName = `${product}.json`;
+      const fileName = `${apiProductName}.json`;
       saveApiProductLocally(
         localBackUpPath,
         fileName,
         JSON.stringify(apiProduct)
       );
-    });
+    } else {
+      throw Error(
+        `specify --name option to backup specific api product or --all option`
+      );
+    }
   } catch (error) {
     logError(error.message);
   }
