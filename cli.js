@@ -144,7 +144,7 @@ program
   .action(backUpDev);
 
 program
-  .command("dev-app")
+  .command("developer-app")
   .description("Backup all developer Apps")
   .action(backUpDevApp);
 
