@@ -74,7 +74,7 @@ function backup(apigeeResourceType) {
       backUpApiProxy(all, name, revision);
       break;
     case "shared-flow":
-      backUpSharedFlow();
+      backUpSharedFlow(all, name, revision);
       break;
     case "api-product":
       backUpApiProduct();
