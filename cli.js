@@ -184,11 +184,8 @@ program
   .command("api-proxy")
   .description("Backup all revisions of all Api Proxies")
   .option("--all", "Back up all", false)
-  .option("--name <string>", "Name of the apigee resource")
-  .option(
-    "--revision <string>",
-    "Revision of the apigee api proxy or shared flow"
-  )
+  .option("--name <string>", "Name of the apigee api proxy")
+  .option("--revision <string>", "Revision of the apigee api proxy")
   .action(function () {
     backUpApiProxy(this.opts().all, this.opts().name, this.opts().revision);
   });
@@ -196,7 +193,12 @@ program
 program
   .command("shared-flow")
   .description("Backup all revisions of all Shared Flows")
-  .action(backUpSharedFlow);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee shared flow")
+  .option("--revision <string>", "Revision of the apigee shared flow")
+  .action(function () {
+    backUpSharedFlow(this.opts().all, this.opts().name, this.opts().revision);
+  });
 
 program
   .command("api-product")
