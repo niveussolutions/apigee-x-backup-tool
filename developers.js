@@ -20,7 +20,7 @@ const config = getConfig();
 const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "developers";
 
-const backUpDev = async () => {
+const backUpDev = async (all, developerEmail) => {
   try {
     const authToken = await auth.getAccessToken();
 
@@ -29,34 +29,56 @@ const backUpDev = async () => {
         Authorization: `Bearer ${authToken}`,
       },
     };
-    const devsInApigee = await getListOfDevsFromApigee(
-      organizationName,
-      options
-    );
+    if (all) {
+      const devsInApigee = await getListOfDevsFromApigee(
+        organizationName,
+        options
+      );
 
-    if (!devsInApigee || !Array.isArray(devsInApigee)) {
-      logError("Something went wrong: Could not fetch developers from Apigee");
-      return;
-    } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
-      logInfo("No developers found");
-      return;
-    }
+      if (!devsInApigee || !Array.isArray(devsInApigee)) {
+        logError(
+          "Something went wrong: Could not fetch developers from Apigee"
+        );
+        return;
+      } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
+        logInfo("No developers found");
+        return;
+      }
 
-    devsInApigee.map(async (dev) => {
+      devsInApigee.map(async (dev) => {
+        const devJson = await getDevConfigFromApigee(
+          organizationName,
+          options,
+          dev
+        );
+        if (!devJson) {
+          logError(
+            `Something went wrong: Could not fetch developer ${dev} from Apigee`
+          );
+          return;
+        }
+        const fileName = `${devJson.email}.json`;
+        saveDevsLocally(localBackUpPath, fileName, JSON.stringify(devJson));
+      });
+    } else if (!all && developerEmail) {
       const devJson = await getDevConfigFromApigee(
         organizationName,
         options,
-        dev
+        developerEmail
       );
       if (!devJson) {
         logError(
-          `Something went wrong: Could not fetch developer ${dev} from Apigee`
+          `Something went wrong: Could not fetch developer ${developerEmail} from Apigee`
         );
         return;
       }
       const fileName = `${devJson.email}.json`;
       saveDevsLocally(localBackUpPath, fileName, JSON.stringify(devJson));
-    });
+    } else {
+      throw Error(
+        `specify --name option to backup a specific developer or --all option`
+      );
+    }
   } catch (error) {
     logError(error.message);
   }

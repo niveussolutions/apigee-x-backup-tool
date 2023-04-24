@@ -204,7 +204,7 @@ program
   .command("api-product")
   .description("Backup all Api Products")
   .option("--all", "Back up all", false)
-  .option("--name <string>", "Name of the apigee shared flow")
+  .option("--name <string>", "Name of the apigee api product")
   .action(function () {
     backUpApiProduct(this.opts().all, this.opts().name);
   });
@@ -212,7 +212,11 @@ program
 program
   .command("developer")
   .description("Backup all App Developers")
-  .action(backUpDev);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Email of the apigee developer")
+  .action(function () {
+    backUpDev(this.opts().all, this.opts().name);
+  });
 
 program
   .command("developer-app")
