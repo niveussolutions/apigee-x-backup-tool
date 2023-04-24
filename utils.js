@@ -517,7 +517,41 @@ const listEnvironments = async (orgName, options) => {
   }
 };
 
+////////////////cli///////////////////////////
+import { exec } from "child_process";
+const gcloudLogin = () => {
+  exec("gcloud auth application-default login");
+};
+
+////////////////config////////////////////////
+import config from "./config.json" assert { type: "json" };
+const getConfig = () => {
+  return config;
+};
+
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+function setConfig() {
+  try {
+    const { orgName, backupFolderPath } = this.opts();
+    const newConfig = {
+      organization: orgName,
+      backupFolderPath,
+    };
+
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+
+    fs.writeFileSync(`${__dirname}/config.json`, JSON.stringify(newConfig));
+    logSuccess(`configuration set successfully`);
+  } catch (error) {
+    logError(error.message);
+  }
+}
+
 export {
+  setConfig,
+  getConfig,
   saveTargetServerLocally,
   getTargetServerFromApigee,
   getListOfTargetServersFromApigee,
@@ -547,4 +581,5 @@ export {
   getFlowHooksFromApigee,
   saveFlowHooksLocally,
   listEnvironments,
+  gcloudLogin,
 };

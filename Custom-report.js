@@ -11,12 +11,15 @@ import {
   saveCustomReportLocally,
   getCustomReportFromApigee,
   getListOfCustomReportFromApigee,
+  getConfig,
 } from "./utils.js";
-import config from "./config.js";
+
 import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
+const config = getConfig();
+
 const organizationName = config.organization;
-const localBackUpPath = config.localBackUp.basePath + "Custom Reports";
+const localBackUpPath = config.backupFolderPath + "Custom Reports";
 
 const backUpCustomReports = async () => {
   try {

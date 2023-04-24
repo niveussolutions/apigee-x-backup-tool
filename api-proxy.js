@@ -14,13 +14,15 @@ import {
   getRevisionsForProxyFromApigee,
   downloadRevisionForProxy,
   saveProxyRevisionLocally,
+  getConfig,
 } from "./utils.js";
-import config from "./config.js";
 
 import { logError, logWarning, logSuccess, logInfo } from "./chalk.js";
 
+const config = getConfig();
+
 const organizationName = config.organization;
-const localBackUpPath = config.localBackUp.basePath;
+const localBackUpPath = config.backupFolderPath;
 
 const backUpApiProxy = async () => {
   try {

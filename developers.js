@@ -11,12 +11,14 @@ import {
   saveDevsLocally,
   getDevConfigFromApigee,
   getListOfDevsFromApigee,
+  getConfig,
 } from "./utils.js";
-import config from "./config.js";
+
 import { logInfo, logError } from "./chalk.js";
 
+const config = getConfig();
 const organizationName = config.organization;
-const localBackUpPath = config.localBackUp.basePath + "developers";
+const localBackUpPath = config.backupFolderPath + "developers";
 
 const backUpDev = async () => {
   try {
