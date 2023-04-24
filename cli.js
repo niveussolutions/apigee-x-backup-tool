@@ -12,7 +12,7 @@ import backUpDevApp from "./dev-app.js";
 import backUpFlowHooks from "./Flow-Hooks.js";
 import backUpCustomReports from "./Custom-report.js";
 import backUpTargetServer from "./target-server.js";
-import { logError } from "./chalk.js";
+import { logError, logWarning } from "./chalk.js";
 
 function config(action) {
   switch (action) {
@@ -25,6 +25,17 @@ function config(action) {
 }
 
 function backup(apigeeResourceType) {
+  const envName = this.opts().envName;
+
+  if (
+    apigeeResourceType !== "flow-hook" &&
+    apigeeResourceType !== "target-server" &&
+    envName != "None"
+  ) {
+    logWarning(
+      `--envName is a optional parameter and it is not expected for apigee resource of type-${apigeeResourceType}`
+    );
+  }
   switch (apigeeResourceType) {
     case "all":
       backUpAll();
@@ -45,10 +56,10 @@ function backup(apigeeResourceType) {
       backUpDevApp();
       break;
     case "target-server":
-      backUpTargetServer(this.opts().envName);
+      backUpTargetServer(envName);
       break;
     case "flow-hook":
-      backUpFlowHooks(this.opts().envName);
+      backUpFlowHooks(envName);
       break;
     case "custom-report":
       backUpCustomReports();
