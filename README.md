@@ -1,8 +1,8 @@
-# APIGEE - Backup automation script
+# APIGEE - Backup Tool
 
-**The automation script can backup Apigee Api Proxies, Shared flows, Api Products etc**
+**The tool can backup Apigee Api Proxies, Shared flows, Api Products etc**
 
-> NOTE: The Script is tested and works perfectly on Linux(ubuntu) and nodejs version 16.19.1
+> NOTE: The Script is tested and works perfectly on Linux(ubuntu) and nodejs version >16
 
 ### Prerequisite
 
