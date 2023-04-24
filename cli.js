@@ -14,6 +14,16 @@ import backUpCustomReports from "./Custom-report.js";
 import backUpTargetServer from "./target-server.js";
 import { logError } from "./chalk.js";
 
+function config(action) {
+  switch (action) {
+    case "set":
+      setConfig(this.opts());
+      break;
+    default:
+      logError(`illegal action - ${action}`);
+  }
+}
+
 function backup(apigeeResourceType) {
   switch (apigeeResourceType) {
     case "all":
@@ -44,7 +54,7 @@ function backup(apigeeResourceType) {
       backUpCustomReports();
       break;
     default:
-      console.log("illegal apigee resource type");
+      logError(`illegal apigee resource type - ${apigeeResourceType}`);
   }
 }
 
@@ -64,7 +74,7 @@ program
     "-F, --backupFolderPath <string>",
     "Path for the backup folder"
   )
-  .action(setConfig);
+  .action(config);
 
 program
   .command("backup")

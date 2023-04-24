@@ -532,9 +532,9 @@ const getConfig = () => {
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-function setConfig() {
+function setConfig(opts) {
   try {
-    const { orgName, backupFolderPath } = this.opts();
+    const { orgName, backupFolderPath } = opts;
     const newConfig = {
       organization: orgName,
       backupFolderPath,
