@@ -60,7 +60,7 @@ program
   .argument("<action>", "Config action (set)")
   .description("configure organization name and backupFolderPath")
   .requiredOption("-O, --orgName <string>", "Name of the apigee organization")
-  .requiredOption("--backupFolderPath <string>", "Path for the backup folder")
+  .requiredOption("-F, --backupFolderPath <string>", "Path for the backup folder")
   .action(setConfig);
 
 program

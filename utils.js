@@ -529,6 +529,9 @@ const getConfig = () => {
   return config;
 };
 
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
 function setConfig() {
   try {
     const { orgName, backupFolderPath } = this.opts();
@@ -536,7 +539,10 @@ function setConfig() {
       organization: orgName,
       backupFolderPath,
     };
-    fs.writeFileSync("./config.json", JSON.stringify(newConfig));
+
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+
+    fs.writeFileSync(`${__dirname}/config.json`, JSON.stringify(newConfig));
     logSuccess(`configuration set successfully`);
   } catch (error) {
     logError(error.message);
