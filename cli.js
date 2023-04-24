@@ -29,6 +29,7 @@ function backup(apigeeResourceType) {
   const all = this.opts().all;
   const name = this.opts().name;
   const revision = this.opts().revision;
+  const devEmail = this.opts().dev;
 
   if (
     apigeeResourceType !== "flow-hook" &&
@@ -66,6 +67,12 @@ function backup(apigeeResourceType) {
     );
   }
 
+  if (apigeeResourceType !== "developer-app" && devEmail) {
+    logWarning(
+      `--dev option is not expected for apigee resource of type - ${apigeeResourceType}`
+    );
+  }
+
   switch (apigeeResourceType) {
     case "all":
       backUpAll();
@@ -83,7 +90,7 @@ function backup(apigeeResourceType) {
       backUpDev(all, name);
       break;
     case "developer-app":
-      backUpDevApp(all, name);
+      backUpDevApp(all, name, devEmail);
       break;
     case "target-server":
       backUpTargetServer(envName);
@@ -149,6 +156,7 @@ program
   )
   .option("--all", "Back up all", false)
   .option("--name <string>", "Name of the apigee resource")
+  .option("--dev <string>", "developer email")
   .option(
     "--revision <string>",
     "Revision of the apigee api proxy or shared flow"
@@ -214,6 +222,7 @@ program
   .description("Backup all App Developers")
   .option("--all", "Back up all", false)
   .option("--name <string>", "Email of the apigee developer")
+
   .action(function () {
     backUpDev(this.opts().all, this.opts().name);
   });
@@ -221,7 +230,12 @@ program
 program
   .command("developer-app")
   .description("Backup all developer Apps")
-  .action(backUpDevApp);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "name of the developer app")
+  .option("--dev <string>", "developer email")
+  .action(function () {
+    backUpDevApp(this.opts().all, this.opts().name, this.opts().dev);
+  });
 
 program
   .command("flow-hook")
