@@ -26,7 +26,7 @@ const options = {
 const backUpAll = async () => {
   const envs = await listEnvironments(organizationName, options);
 
-  await backUpApiProxy();
+  await backUpApiProxy(true);
   await backUpSharedFlow();
   await backedUpApiProduct();
   await backUpDev();

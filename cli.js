@@ -26,6 +26,9 @@ function config(action) {
 
 function backup(apigeeResourceType) {
   const envName = this.opts().envName;
+  const all = this.opts().all;
+  const name = this.opts().name;
+  const revision = this.opts().revision;
 
   if (
     apigeeResourceType !== "flow-hook" &&
@@ -36,12 +39,39 @@ function backup(apigeeResourceType) {
       `--envName is a optional parameter and it is not expected for apigee resource of type-${apigeeResourceType}`
     );
   }
+
+  if (apigeeResourceType === "all" && all) {
+    logWarning(
+      `--all option is not expected for apigee resource of type -${apigeeResourceType}`
+    );
+  }
+
+  if (
+    apigeeResourceType === "api-proxy" ||
+    apigeeResourceType === "shared-flow"
+  ) {
+    if (!all && (!name || !revision)) {
+      logError(`requires --name and --revision options`);
+      return;
+    }
+  }
+
+  if (
+    apigeeResourceType !== "api-proxy" &&
+    apigeeResourceType !== "shared-flow" &&
+    revision
+  ) {
+    logWarning(
+      `--revision option is not expected for apigee resource of type - ${apigeeResourceType}`
+    );
+  }
+
   switch (apigeeResourceType) {
     case "all":
       backUpAll();
       break;
     case "api-proxy":
-      backUpApiProxy();
+      backUpApiProxy(all, name, revision);
       break;
     case "shared-flow":
       backUpSharedFlow();
@@ -117,6 +147,12 @@ program
     "Name of the environment. Applicable to type target-server and flow-hook",
     "None"
   )
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee resource")
+  .option(
+    "--revision <string>",
+    "Revision of the apigee api proxy or shared flow"
+  )
   .action(backup);
 
 program
@@ -147,7 +183,15 @@ program
 program
   .command("api-proxy")
   .description("Backup all revisions of all Api Proxies")
-  .action(backUpApiProxy);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee resource")
+  .option(
+    "--revision <string>",
+    "Revision of the apigee api proxy or shared flow"
+  )
+  .action(function () {
+    backUpApiProxy(this.opts().all, this.opts().name, this.opts().revision);
+  });
 
 program
   .command("shared-flow")
