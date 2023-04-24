@@ -12,6 +12,8 @@
    
 3. Clone the repository
 
+4. Create a directory where you want to backup all apigee objects
+
 ### Getting Started
 
 There are 2 ways you can run the apigee-backup-script. 
@@ -24,11 +26,9 @@ There are 2 ways you can run the apigee-backup-script.
 
 2. run `npm install` to install all the dependencies, from inside the respository where package.json file is located
 
-3. Create a directory where you want to backup all apigee objects
+3. update organization(apigee organization- you will find this in the top left dropdown in the apigee console/ project id in the GCP console ), backupFolderPath (path of the backup folder , add "/" at the end of the path) in config.json
 
-4. update organization(apigee organization- you will find this in the top left dropdown in the apigee console/ project id in the GCP console ), local backup basepath (path of the backup folder , add "/" at the end of the path) in config.js
-
-5. Run below npm scripts as per requirement
+4. Run below npm scripts as per requirement
 
 run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server etc
 
@@ -47,6 +47,8 @@ run `npm run backupCustomReports` to backup Custom Reports
 run `npm run backupFlowHooks --envName=env-name` to backup Flow Hooks for a specific environment
 
 run `npm run backupTargetServer --envName=env-name` to backup Custom Reports for a specific environment
+
+5. Run step 1 and step 3 everytime you want to switch between gcp accounts and apigee organization
 
 #### As a cli tool
 
@@ -101,12 +103,19 @@ Commands:
 7. run following commands as per requirements
 
     - run `apigee-backup-tool all` or `apigee-backup-tool backup all` to backup all apigee resources
+  
     - run `apigee-backup-tool api-proxy` or `apigee-backup-tool backup api-proxy` to backup all revisions of all api proxies
+
     - run `apigee-backup-tool shared-flow` or `apigee-backup-tool backup shared-flow` to backup all revisions of all shared flows
+
     - run `apigee-backup-tool api-product` or `apigee-backup-tool backup api-product` to backup all Api Products
+
     - run `apigee-backup-tool developer` or `apigee-backup-tool backup developer` to backup all  all Developers
+
     - run `apigee-backup-tool developer-app` or `apigee-backup-tool backup developer-app` to backup all  all Developer Apps
+
     - run `apigee-backup-tool custom-report` or `apigee-backup-tool backup custom-report` to backup all Custom reports
+
     - run `apigee-backup-tool flow-hook` or `apigee-backup-tool backup flow-hook` to backup all flow hooks for a specific environment
             **The above command takes name of the environment as an option**
     ```
@@ -117,6 +126,8 @@ Commands:
 
         apigee-backup-tool backup flow-hook --envName environment-name
     ```
+
+
     - run `apigee-backup-tool target-server` or `apigee-backup-tool backup target-server` to backup all Target servers for a specific environment
             **The above command takes name of the environment as an option**
 
@@ -127,6 +138,8 @@ Commands:
 
         apigee-backup-tool backup target-server --envName environment-name
     ```
+
+8. Run step 4 and step 5 everytime you want to switch between gcp accounts and apigee organization
 
  
 
