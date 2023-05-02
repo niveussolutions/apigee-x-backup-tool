@@ -22,7 +22,6 @@ const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "Custom Reports";
 
 const backUpCustomReports = async (all, crName) => {
-  
   try {
     const authToken = await auth.getAccessToken();
 
@@ -54,6 +53,12 @@ const backUpCustomReports = async (all, crName) => {
         crName,
         options
       );
+      if (!data) {
+        logError(
+          `Something went wrong: Not able to fetch custom report from apigee`
+        );
+        return;
+      }
       const fileName = `${data.displayName
         .replace(" ", "-")
         .replace("/", "-")}.json`;
