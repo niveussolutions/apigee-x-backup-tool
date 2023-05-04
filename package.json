@@ -5,6 +5,12 @@
   "bin": {
     "apigee-backup-tool": "./cli.js"
   },
+  "license": "MIT",
+  "homepage": "https://github.com/niveussolutions/apigee-x-backup-tool#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niveussolutions/apigee-x-backup-tool.git"
+  },
   "dependencies": {
     "axios": "^0.26.1",
     "chalk": "^5.2.0",

@@ -4,6 +4,8 @@
 
 > NOTE: The Script is tested and works perfectly on Linux(ubuntu) and nodejs version >16
 
+
+
 ### Prerequisite
 
 1. Download [gcloud](https://cloud.google.com/sdk/docs/install)
@@ -51,6 +53,10 @@ run `npm run backupTargetServer --envName=env-name` to backup Custom Reports for
 5. Run step 1 and step 3 everytime you want to switch between gcp accounts and apigee organization
 
 #### As a cli tool
+
+This tool is  published to npm registry. Can be installed  as a global npm package and used  as a cli tool - [https://www.npmjs.com/package/@niveus/apigee-backup-tool](https://www.npmjs.com/package/@niveus/apigee-backup-tool)
+
+**or**
 
 1. run `npm install` to install all the dependencies, from inside the respository where package.json file is located
 
