@@ -88,6 +88,10 @@ const backUpTargetServer = async (all, envName) => {
           JSON.stringify(tsJson)
         );
       });
+    } else {
+      throw Error(
+        "specify --envName to backup for a specific environment or provide --all option"
+      );
     }
   } catch (error) {
     logError(error.message);

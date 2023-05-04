@@ -241,10 +241,11 @@ program
 
 program
   .command("flow-hook")
-  .requiredOption("-e, --envName <string>", "Name of the environment")
+  .option("--all", "Back up all", false)
+  .option("-e, --envName <string>", "Name of the environment")
   .description("Backup all Flow Hooks")
   .action(function () {
-    return backUpFlowHooks(this.opts().envName);
+    return backUpFlowHooks(this.opts().all, this.opts().envName);
   });
 
 program
@@ -259,9 +260,10 @@ program
 program
   .command("target-server")
   .description("Backup all Target Server")
-  .requiredOption("-e, --envName <string>", "Name of the environment")
+  .option("--all", "Back up all", false)
+  .option("-e, --envName <string>", "Name of the environment")
   .action(function () {
-    backUpTargetServer(this.opts().envName);
+    backUpTargetServer(this.opts().all, this.opts().envName);
   });
 
 program.parse();

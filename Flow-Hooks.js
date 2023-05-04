@@ -65,6 +65,10 @@ const backUpFlowHooks = async (all, envName) => {
         const fileName = `${fh}-${envName}.json`;
         saveFlowHooksLocally(localBackUpPath, fileName, JSON.stringify(tsJson));
       });
+    } else {
+      throw Error(
+        "specify --envName to backup for a specific environment or provide --all option"
+      );
     }
   } catch (error) {
     logError(error.message);
