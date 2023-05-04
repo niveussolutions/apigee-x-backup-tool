@@ -34,8 +34,8 @@ const backUpAll = async () => {
   await backUpCustomReports(true);
 
   envs.forEach(async (env) => {
-    await backUpTargetServer(env);
-    await backupFlowHooks(env);
+    await backUpTargetServer(false, env);
+    await backupFlowHooks(false, env);
   });
 };
 

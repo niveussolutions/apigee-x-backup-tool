@@ -48,25 +48,26 @@ const backUpCustomReports = async (all, crName) => {
         saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(cs));
       });
     } else if (!all && crName) {
-      const data = await getCustomReportFromApigee(
-        organizationName,
-        crName,
-        options
-      );
-      if (!data) {
-        logError(
-          `Something went wrong: Not able to fetch custom report from apigee`
-        );
-        return;
-      }
-      const fileName = `${data.displayName
-        .replace(" ", "-")
-        .replace("/", "-")}.json`;
-      saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(data));
-    } else {
       throw Error(
-        "specify --name option to backup a specific custom report or specify --all option"
+        "--name option is not support for custom report backup. Use --all option to backup all custom reports"
       );
+      // const data = await getCustomReportFromApigee(
+      //   organizationName,
+      //   crName,
+      //   options
+      // );
+      // if (!data) {
+      //   logError(
+      //     `Something went wrong: Not able to fetch custom report from apigee`
+      //   );
+      //   return;
+      // }
+      // const fileName = `${data.displayName
+      //   .replace(" ", "-")
+      //   .replace("/", "-")}.json`;
+      // saveCustomReportLocally(localBackUpPath, fileName, JSON.stringify(data));
+    } else {
+      throw Error("specify --all option to backup all custom report");
     }
   } catch (error) {
     logError(error.message);

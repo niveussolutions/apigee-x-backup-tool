@@ -12,6 +12,7 @@ import {
   getFlowHooksFromApigee,
   getListOfFlowHooksFromApigee,
   getConfig,
+  listEnvironments,
 } from "./utils.js";
 
 import { logInfo, logError } from "./chalk.js";
@@ -20,9 +21,9 @@ const config = getConfig();
 const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "Flow-Hooks";
 
-const backUpFlowHooks = async (envName) => {
-  if (!envName || envName === "None") {
-    logError("Name of the environment is required to backup flow hooks");
+const backUpFlowHooks = async (all, envName) => {
+  if (!all && envName === "None") {
+    logError("requires --envName option or provide --all option ");
     return;
   }
 
@@ -40,25 +41,31 @@ const backUpFlowHooks = async (envName) => {
       "PreTargetFlowHook",
       "PostTargetFlowHook",
     ];
-
-    flowhooksInApigee.map(async (fh) => {
-      const tsJson = await getFlowHooksFromApigee(
-        organizationName,
-        envName,
-        fh,
-        options
-      );
-
-      if (!tsJson) {
-        logError(
-          `Something is wrong: Could not get Flow hook ${fh} from Apigee`
+    if (all) {
+      const envs = await listEnvironments(organizationName, options);
+      envs.forEach(async (env) => {
+        await backUpFlowHooks(false, env);
+      });
+    } else if (envName && !all) {
+      flowhooksInApigee.map(async (fh) => {
+        const tsJson = await getFlowHooksFromApigee(
+          organizationName,
+          envName,
+          fh,
+          options
         );
-        return;
-      }
 
-      const fileName = `${fh}-${envName}.json`;
-      saveFlowHooksLocally(localBackUpPath, fileName, JSON.stringify(tsJson));
-    });
+        if (!tsJson) {
+          logError(
+            `Something is wrong: Could not get Flow hook ${fh} from Apigee`
+          );
+          return;
+        }
+
+        const fileName = `${fh}-${envName}.json`;
+        saveFlowHooksLocally(localBackUpPath, fileName, JSON.stringify(tsJson));
+      });
+    }
   } catch (error) {
     logError(error.message);
   }

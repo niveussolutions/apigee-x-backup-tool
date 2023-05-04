@@ -52,7 +52,9 @@ function backup(apigeeResourceType) {
     apigeeResourceType === "shared-flow"
   ) {
     if (!all && (!name || !revision)) {
-      logError(`requires --name and --revision options`);
+      logError(
+        `requires --name and --revision options or provide --all option`
+      );
       return;
     }
   }
@@ -93,10 +95,10 @@ function backup(apigeeResourceType) {
       backUpDevApp(all, name, devEmail);
       break;
     case "target-server":
-      backUpTargetServer(envName);
+      backUpTargetServer(all, envName);
       break;
     case "flow-hook":
-      backUpFlowHooks(envName);
+      backUpFlowHooks(all, envName);
       break;
     case "custom-report":
       backUpCustomReports(all, name);
