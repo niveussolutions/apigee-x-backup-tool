@@ -252,7 +252,10 @@ program
   .command("custom-report")
   .description("Backup all Custom Reports")
   .option("--all", "Back up all", false)
-  .option("--name <string>", "name of the custom report")
+  .option(
+    "--name <string>",
+    "name of the custom report(Ex: 3aed7d5c-330d-4e30-acf1-d19a25be64ba)"
+  )
   .action(function () {
     backUpCustomReports(this.opts().all, this.opts().name);
   });
