@@ -34,23 +34,91 @@ There are 2 ways you can run the apigee-backup-script.
 
 run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server etc
 
-run `npm run backupApiProxy` to backup Api Proxies
+run below scripts  to backup Api Proxies
+```
+  // To backup all revisions of all api proxy
+  npm run backupApiProxy --all
 
-run `npm run backupSharedFlow` to backup Shared Flows
+  // To backup specific revision of a specific api proxy
+  npm run backupApiProxy --name=name-of-proxy --revision=revision-of-proxy
 
-run `npm run backupApiProduct` to backup Api Products
+```
 
-run `npm run backupDev` to backup Developers
+run below scripts  to backup Shared Flows
+```
+  // To backup all revisions of all shared flows
+  npm run backupSharedFlow --all
 
-run `npm run backupDevApp` to backup Developer App
+  // To backup specific revision of a specific shared flow
+  npm run backupSharedFlow --name=name-of-sharedflow --revision=revision-of-sharedflow
 
-run `npm run backupCustomReports` to backup Custom Reports
+```
 
-run `npm run backupFlowHooks --envName=env-name` to backup Flow Hooks for a specific environment
+run below scripts to backup Api Products
+```
+  // To backup all Api Products
+  npm run backupApiProduct --all
 
-run `npm run backupTargetServer --envName=env-name` to backup Custom Reports for a specific environment
+  // To backup  a specific Api Product
+  npm run backupApiProduct --name=name-of-api-product
 
-5. Run step 1 and step 3 everytime you want to switch between gcp accounts and apigee organization
+```
+
+run below scripts to backup Developers
+```
+  // To backup all Developers
+  npm run backupDev --all
+
+  // To backup  a specific Developer
+  npm run backupDev --name=developer-email
+
+```
+
+run below scripts to backup Developer App
+```
+  // To backup all Developer Apps
+  npm run backupDevApp --all
+
+  // To backup  a specific Developer App
+  npm run backupDevApp --name=name-of-app --developer=developer-email
+
+```
+
+run below scripts to backup Custom Reports
+```
+  // To backup all Custom reports
+  npm run backupCustomReports --all
+
+  // To backup  a specific Custom Report
+  npm run backupCustomReports --name=name-of-custom-report
+
+  name-of-custom-report - is actually a id Ex: 3aed7d5c-330d-4e30-acf1-d19a25be64ba
+
+```
+
+run below scripts to backup Flow Hooks
+```
+  // To backup all Flow hooks for all environments
+  npm run backupFlowHooks --all
+
+  // To backup  all Flow hooks for a specific environment
+  npm run backupFlowHooks --envName=name-of-environment
+
+
+```
+
+run below scripts to backup Target servers for a specific environment
+```
+  // To backup all Target servers for all environments
+  npm run backupTargetServer --all
+
+  // To backup  all Target Servers for a specific environment
+  npm run backupTargetServer --envName=name-of-environment
+
+
+```
+
+1. Run step 1 and step 3 everytime you want to switch between gcp accounts and apigee organization
 
 #### As a cli tool
 
