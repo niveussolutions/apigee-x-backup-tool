@@ -180,7 +180,6 @@ Commands:
 7. run following commands as required
 
     - run `apigee-backup-tool all` or `apigee-backup-tool backup all` to backup all apigee resources
-  
     - run below commands to backup Api Proxies
       ```
         // To backup all revisions of all api proxies
@@ -196,9 +195,8 @@ Commands:
 
 
       ```
-
+     
     - run below commands to backup shared flows
-  
       ```
         // To backup all revisions of all shared flows
         apigee-backup-tool shared-flow --all
@@ -212,10 +210,9 @@ Commands:
         apigee-backup-tool backup shared-flow --name name-of-shared-flow --revision shared-flow-revision
 
 
-     ```
+      ```
 
     - run below commands to backup Api Products
-
       ```
         // To backup all Api Products
         apigee-backup-tool api-product --all
@@ -227,12 +224,10 @@ Commands:
         apigee-backup-tool api-product --name name-of-api-product 
         or 
         apigee-backup-tool backup api-product --name name-of-api-product 
+      ```
 
-
-     ```
-    
     - run below commands  to backup  Developers
-    ```
+      ```
         // To backup all Developers
         apigee-backup-tool developer --all
         or 
@@ -242,10 +237,8 @@ Commands:
 
         apigee-backup-tool developer --name developer-email
         or 
-        apigee-backup-tool backup developer --name developer-email
-
-
-     ```
+        apigee-backup-tool backup developer --name developer-email 
+      ```
 
     - run below commands  to backup  Developer Apps
       ```
@@ -259,12 +252,9 @@ Commands:
         apigee-backup-tool developer-app --dev developer-email --name app-name
         or 
         apigee-backup-tool backup developer-app --dev developer-email --name app-name
-
-
-     ```
-
+      ```
     - run below commands  to backup  Custom reports
-     ```
+      ```
         // To backup all Custom reports
         apigee-backup-tool custom-report --all
         or 
@@ -277,13 +267,9 @@ Commands:
         apigee-backup-tool backup custom-report  --name custom-report-name
 
         custom-report-name - is actually an id Ex: 3aed7d5c-330d-4e30-acf1-d19a25be64ba
-
-
-     ```
-
-    - run below commands to backup flow hooks 
-          
-    ```
+      ```
+    - run below commands to backup flow hooks
+      ```
         // To backup all flow hooks for all environments
         apigee-backup-tool flow-hook --all
         or 
@@ -293,12 +279,9 @@ Commands:
         apigee-backup-tool flow-hook --envName name-of-environment
         or
         apigee-backup-tool backup flow-hook --envName name-of-environment
-    ```
-
-
-    - run below commands to backup all Target servers 
-
-    ```
+      ```
+    - run below commands to backup  Target servers 
+      ```
 
       // To backup all Target servers for all environment
           apigee-backup-tool target-server --all
@@ -311,7 +294,9 @@ Commands:
         apigee-backup-tool backup target-server --envName name-of-environment
 
 
-    ```
+      ```
+
+   
 
 8. Run step 4 and step 5 everytime you want to switch between gcp accounts and apigee organization
 
