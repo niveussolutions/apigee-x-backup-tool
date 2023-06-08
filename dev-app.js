@@ -20,7 +20,7 @@ const config = getConfig();
 const organizationName = config.organization;
 const localBackUpPath = config.backupFolderPath + "developer apps";
 
-const backUpDevApp = async () => {
+const backUpDevApp = async (all, appName, devEmail) => {
   try {
     const authToken = await auth.getAccessToken();
 
@@ -29,61 +29,85 @@ const backUpDevApp = async () => {
         Authorization: `Bearer ${authToken}`,
       },
     };
-    const devsInApigee = await getListOfDevsFromApigee(
-      organizationName,
-      options
-    );
-
-    if (!devsInApigee || !Array.isArray(devsInApigee)) {
-      logError("Something went wrong: Could not fetch developers from Apigee");
-      return;
-    } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
-      logInfo("No developers found");
-      return;
-    }
-
-    devsInApigee.map(async (dev) => {
-      const devAppsInApigee = await getListOfDevAppsFromApigee(
+    if (all) {
+      const devsInApigee = await getListOfDevsFromApigee(
         organizationName,
-        dev,
         options
       );
 
-      if (!devAppsInApigee || !Array.isArray(devAppsInApigee)) {
+      if (!devsInApigee || !Array.isArray(devsInApigee)) {
         logError(
-          `Something went wrong : Could not fetch apps for developer ${dev}`
+          "Something went wrong: Could not fetch developers from Apigee"
         );
         return;
-      } else if (
-        Array.isArray(devAppsInApigee) &&
-        devAppsInApigee.length === 0
-      ) {
-        logInfo(`No apps found for ${dev}`);
+      } else if (Array.isArray(devsInApigee) && devsInApigee.length === 0) {
+        logInfo("No developers found");
         return;
       }
 
-      devAppsInApigee.map(async (app) => {
-        const devAppJson = await getDevAppConfigFromApigee(
+      devsInApigee.map(async (dev) => {
+        const devAppsInApigee = await getListOfDevAppsFromApigee(
           organizationName,
           dev,
-          app,
           options
         );
 
-        if (!devAppJson) {
+        if (!devAppsInApigee || !Array.isArray(devAppsInApigee)) {
           logError(
-            `Something went wrong: Could not fetch app-${app} for developer-${dev}`
+            `Something went wrong : Could not fetch apps for developer ${dev}`
           );
+          return;
+        } else if (
+          Array.isArray(devAppsInApigee) &&
+          devAppsInApigee.length === 0
+        ) {
+          logInfo(`No apps found for ${dev}`);
+          return;
         }
-        const fileName = `${dev}--${devAppJson.name}.json`;
 
-        saveDevAppLocally(
-          localBackUpPath,
-          fileName,
-          JSON.stringify(devAppJson)
-        );
+        devAppsInApigee.map(async (app) => {
+          const devAppJson = await getDevAppConfigFromApigee(
+            organizationName,
+            dev,
+            app,
+            options
+          );
+
+          if (!devAppJson) {
+            logError(
+              `Something went wrong: Could not fetch app-${app} for developer-${dev}`
+            );
+          }
+          const fileName = `${dev}--${devAppJson.name}.json`;
+
+          saveDevAppLocally(
+            localBackUpPath,
+            fileName,
+            JSON.stringify(devAppJson)
+          );
+        });
       });
-    });
+    } else if (!all && appName && devEmail) {
+      const devAppJson = await getDevAppConfigFromApigee(
+        organizationName,
+        devEmail,
+        appName,
+        options
+      );
+
+      if (!devAppJson) {
+        logError(
+          `Something went wrong: Could not fetch app-${appName} for developer-${devEmail}`
+        );
+      }
+      const fileName = `${devEmail}--${devAppJson.name}.json`;
+
+      saveDevAppLocally(localBackUpPath, fileName, JSON.stringify(devAppJson));
+    } else {
+      throw Error(
+        "specify --name and --dev option to backup a specific app or --all option"
+      );
+    }
   } catch (error) {
     logError(error.message);
   }

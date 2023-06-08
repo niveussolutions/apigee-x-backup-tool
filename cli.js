@@ -26,6 +26,10 @@ function config(action) {
 
 function backup(apigeeResourceType) {
   const envName = this.opts().envName;
+  const all = this.opts().all;
+  const name = this.opts().name;
+  const revision = this.opts().revision;
+  const devEmail = this.opts().dev;
 
   if (
     apigeeResourceType !== "flow-hook" &&
@@ -36,33 +40,68 @@ function backup(apigeeResourceType) {
       `--envName is a optional parameter and it is not expected for apigee resource of type-${apigeeResourceType}`
     );
   }
+
+  if (apigeeResourceType === "all" && all) {
+    logWarning(
+      `--all option is not expected for apigee resource of type -${apigeeResourceType}`
+    );
+  }
+
+  if (
+    apigeeResourceType === "api-proxy" ||
+    apigeeResourceType === "shared-flow"
+  ) {
+    if (!all && (!name || !revision)) {
+      logError(
+        `requires --name and --revision options or provide --all option`
+      );
+      return;
+    }
+  }
+
+  if (
+    apigeeResourceType !== "api-proxy" &&
+    apigeeResourceType !== "shared-flow" &&
+    revision
+  ) {
+    logWarning(
+      `--revision option is not expected for apigee resource of type - ${apigeeResourceType}`
+    );
+  }
+
+  if (apigeeResourceType !== "developer-app" && devEmail) {
+    logWarning(
+      `--dev option is not expected for apigee resource of type - ${apigeeResourceType}`
+    );
+  }
+
   switch (apigeeResourceType) {
     case "all":
       backUpAll();
       break;
     case "api-proxy":
-      backUpApiProxy();
+      backUpApiProxy(all, name, revision);
       break;
     case "shared-flow":
-      backUpSharedFlow();
+      backUpSharedFlow(all, name, revision);
       break;
     case "api-product":
-      backUpApiProduct();
+      backUpApiProduct(all, name);
       break;
     case "developer":
-      backUpDev();
+      backUpDev(all, name);
       break;
     case "developer-app":
-      backUpDevApp();
+      backUpDevApp(all, name, devEmail);
       break;
     case "target-server":
-      backUpTargetServer(envName);
+      backUpTargetServer(all, envName);
       break;
     case "flow-hook":
-      backUpFlowHooks(envName);
+      backUpFlowHooks(all, envName);
       break;
     case "custom-report":
-      backUpCustomReports();
+      backUpCustomReports(all, name);
       break;
     default:
       logError(`illegal apigee resource type - ${apigeeResourceType}`);
@@ -117,6 +156,13 @@ program
     "Name of the environment. Applicable to type target-server and flow-hook",
     "None"
   )
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee resource")
+  .option("--dev <string>", "developer email")
+  .option(
+    "--revision <string>",
+    "Revision of the apigee api proxy or shared flow"
+  )
   .action(backup);
 
 program
@@ -147,47 +193,80 @@ program
 program
   .command("api-proxy")
   .description("Backup all revisions of all Api Proxies")
-  .action(backUpApiProxy);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee api proxy")
+  .option("--revision <string>", "Revision of the apigee api proxy")
+  .action(function () {
+    backUpApiProxy(this.opts().all, this.opts().name, this.opts().revision);
+  });
 
 program
   .command("shared-flow")
   .description("Backup all revisions of all Shared Flows")
-  .action(backUpSharedFlow);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee shared flow")
+  .option("--revision <string>", "Revision of the apigee shared flow")
+  .action(function () {
+    backUpSharedFlow(this.opts().all, this.opts().name, this.opts().revision);
+  });
 
 program
   .command("api-product")
   .description("Backup all Api Products")
-  .action(backUpApiProduct);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Name of the apigee api product")
+  .action(function () {
+    backUpApiProduct(this.opts().all, this.opts().name);
+  });
 
 program
   .command("developer")
   .description("Backup all App Developers")
-  .action(backUpDev);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "Email of the apigee developer")
+
+  .action(function () {
+    backUpDev(this.opts().all, this.opts().name);
+  });
 
 program
   .command("developer-app")
   .description("Backup all developer Apps")
-  .action(backUpDevApp);
+  .option("--all", "Back up all", false)
+  .option("--name <string>", "name of the developer app")
+  .option("--dev <string>", "developer email")
+  .action(function () {
+    backUpDevApp(this.opts().all, this.opts().name, this.opts().dev);
+  });
 
 program
   .command("flow-hook")
-  .requiredOption("-e, --envName <string>", "Name of the environment")
+  .option("--all", "Back up all", false)
+  .option("-e, --envName <string>", "Name of the environment")
   .description("Backup all Flow Hooks")
   .action(function () {
-    return backUpFlowHooks(this.opts().envName);
+    return backUpFlowHooks(this.opts().all, this.opts().envName);
   });
 
 program
   .command("custom-report")
   .description("Backup all Custom Reports")
-  .action(backUpCustomReports);
+  .option("--all", "Back up all", false)
+  .option(
+    "--name <string>",
+    "name of the custom report(Ex: 3aed7d5c-330d-4e30-acf1-d19a25be64ba)"
+  )
+  .action(function () {
+    backUpCustomReports(this.opts().all, this.opts().name);
+  });
 
 program
   .command("target-server")
   .description("Backup all Target Server")
-  .requiredOption("-e, --envName <string>", "Name of the environment")
+  .option("--all", "Back up all", false)
+  .option("-e, --envName <string>", "Name of the environment")
   .action(function () {
-    backUpTargetServer(this.opts().envName);
+    backUpTargetServer(this.opts().all, this.opts().envName);
   });
 
 program.parse();

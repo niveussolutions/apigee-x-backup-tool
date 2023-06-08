@@ -26,16 +26,16 @@ const options = {
 const backUpAll = async () => {
   const envs = await listEnvironments(organizationName, options);
 
-  await backUpApiProxy();
-  await backUpSharedFlow();
-  await backedUpApiProduct();
-  await backUpDev();
-  await backUpDevApp();
-  await backUpCustomReports();
+  await backUpApiProxy(true);
+  await backUpSharedFlow(true);
+  await backedUpApiProduct(true);
+  await backUpDev(true);
+  await backUpDevApp(true);
+  await backUpCustomReports(true);
 
   envs.forEach(async (env) => {
-    await backUpTargetServer(env);
-    await backupFlowHooks(env);
+    await backUpTargetServer(false, env);
+    await backupFlowHooks(false, env);
   });
 };
 
