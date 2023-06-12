@@ -113,7 +113,7 @@ program
   .description(
     "CLI tool to backup  apigee resources like api proxies, shared flows, Api products etc"
   )
-  .version("1.0.0");
+  .version("2.0.1");
 
 program
   .command("config")
