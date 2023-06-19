@@ -19,13 +19,13 @@
   },
   "scripts": {
     "backupAll": "node -e 'import(\"./index.js\").then(async loadedModule => await loadedModule.default())'",
-    "backupApiProxy": "node -e 'import(\"./api-proxy.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
-    "backupSharedFlow": "node -e 'import(\"./shared-flow.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
-    "backupApiProduct": "node -e 'import(\"./api-product.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
-    "backupDev": "node -e 'import(\"./developers.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
-    "backupDevApp": "node -e 'import(\"./dev-app.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_developer))'",
-    "backupCustomReports": "node -e 'import(\"./Custom-report.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
-    "backupTargetServer": "node -e 'import(\"./target-server.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'",
-    "backupFlowHooks": "node -e 'import(\"./Flow-Hooks.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'"
+    "backupApiProxy": "node -e 'import(\"./lib/api-proxy.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
+    "backupSharedFlow": "node -e 'import(\"./lib/shared-flow.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
+    "backupApiProduct": "node -e 'import(\"./lib/api-product.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
+    "backupDev": "node -e 'import(\"./lib/developers.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
+    "backupDevApp": "node -e 'import(\"./lib/dev-app.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_developer))'",
+    "backupCustomReports": "node -e 'import(\"./lib/Custom-report.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
+    "backupTargetServer": "node -e 'import(\"./lib/target-server.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'",
+    "backupFlowHooks": "node -e 'import(\"./lib/Flow-Hooks.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'"
   }
 }

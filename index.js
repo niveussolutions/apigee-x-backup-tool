@@ -1,12 +1,12 @@
-import backUpApiProxy from "./api-proxy.js";
-import backUpSharedFlow from "./shared-flow.js";
-import backedUpApiProduct from "./api-product.js";
-import backUpDev from "./developers.js";
-import backUpDevApp from "./dev-app.js";
-import backUpTargetServer from "./target-server.js";
-import backUpCustomReports from "./Custom-report.js";
-import backupFlowHooks from "./Flow-Hooks.js";
-import { getConfig, listEnvironments } from "./utils.js";
+import backUpApiProxy from "./lib/api-proxy.js";
+import backUpSharedFlow from "./lib/shared-flow.js";
+import backedUpApiProduct from "./lib/api-product.js";
+import backUpDev from "./lib/developers.js";
+import backUpDevApp from "./lib/dev-app.js";
+import backUpTargetServer from "./lib/target-server.js";
+import backUpCustomReports from "./lib/Custom-report.js";
+import backupFlowHooks from "./lib/Flow-Hooks.js";
+import { getConfig, listEnvironments } from "./lib/utils.js";
 
 import { GoogleAuth } from "google-auth-library";
 const auth = new GoogleAuth();
