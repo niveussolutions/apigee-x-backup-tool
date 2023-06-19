@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "type": "module",
   "bin": {
-    "apigee-backup-tool": "./cli.js"
+    "apigee-backup-tool": "./bin/cli.js"
   },
   "license": "MIT",
   "homepage": "https://github.com/niveussolutions/apigee-x-backup-tool#readme",
