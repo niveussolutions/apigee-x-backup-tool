@@ -1,12 +1,20 @@
 import fs from "fs";
-import { saveProxyRevisionLocally } from "../lib/utils.js";
+import {
+  saveProxyRevisionLocally,
+  downloadRevisionForProxy,
+  getRevisionsForProxyFromApigee,
+  getProxyAndRevisionsStoredLocally,
+  getListOfAllApiProxiesFromApigee,
+} from "../lib/utils.js";
 import { logError, logWarning, logSuccess, logInfo } from "../lib/chalk.js";
+import axios from "axios";
 
 // Mock the fs module functions
 jest.mock("fs", () => ({
   existsSync: jest.fn(),
   mkdir: jest.fn(),
   writeFile: jest.fn(),
+  readdirSync: jest.fn(),
 }));
 
 // Mock the chalk.js module functions
@@ -143,5 +151,154 @@ describe("saveProxyRevisionLocally", () => {
       fileData,
       expect.any(Function)
     );
+  });
+});
+
+jest.mock("axios");
+
+describe("downloadRevisionForProxy", () => {
+  const proxy = "test-proxy";
+  const revision = "1";
+  const orgName = "test-org";
+  const authHeader = "Bearer test-auth-header";
+  const responseData = "mocked-response-data";
+  const error = new Error("Test error");
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should download proxy revision and return response data on success", async () => {
+    axios.get.mockResolvedValueOnce({ data: responseData });
+
+    const result = await downloadRevisionForProxy(
+      proxy,
+      revision,
+      orgName,
+      authHeader
+    );
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis/${proxy}/revisions/${revision}?format=bundle`,
+      {
+        headers: {
+          Authorization: authHeader,
+          Accept: "application/zip",
+        },
+        responseType: "arraybuffer",
+      }
+    );
+    expect(logSuccess).toHaveBeenCalledWith(
+      `Downloaded proxy- ${proxy} with revision- ${revision}`
+    );
+    expect(result).toBe(responseData);
+  });
+
+  test("should log error message on request failure", async () => {
+    axios.get.mockRejectedValueOnce(error);
+
+    await downloadRevisionForProxy(proxy, revision, orgName, authHeader);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis/${proxy}/revisions/${revision}?format=bundle`,
+      {
+        headers: {
+          Authorization: authHeader,
+          Accept: "application/zip",
+        },
+        responseType: "arraybuffer",
+      }
+    );
+    expect(logError).toHaveBeenCalledWith(error.message);
+  });
+});
+
+describe("getRevisionsForProxyFromApigee", () => {
+  const orgName = "test-org";
+  const proxyName = "test-proxy";
+  const options = { headers: { Authorization: "Bearer test-auth-header" } };
+  const responseData = "mocked-response-data";
+  const error = new Error("Test error");
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should retrieve revisions and return response data on success", async () => {
+    axios.get.mockResolvedValueOnce({ data: responseData });
+
+    const result = await getRevisionsForProxyFromApigee(
+      orgName,
+      proxyName,
+      options
+    );
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis/${proxyName}/revisions`,
+      options
+    );
+    expect(result).toBe(responseData);
+  });
+
+  test("should log error message on request failure", async () => {
+    axios.get.mockRejectedValueOnce(error);
+
+    await getRevisionsForProxyFromApigee(orgName, proxyName, options);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis/${proxyName}/revisions`,
+      options
+    );
+    expect(logError).toHaveBeenCalledWith(error.message);
+  });
+});
+
+describe("getListOfAllApiProxiesFromApigee", () => {
+  const orgName = "test-org";
+  const options = { headers: { Authorization: "test-auth-header" } };
+  const responseData = {
+    proxies: [{ name: "proxy1" }, { name: "proxy2" }, { name: "proxy3" }],
+  };
+  const emptyResponseData = { proxies: [] };
+  const error = new Error("Test error");
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should retrieve list of proxies from Apigee", async () => {
+    axios.get.mockResolvedValueOnce({ data: responseData });
+
+    const result = await getListOfAllApiProxiesFromApigee(orgName, options);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis`,
+      options
+    );
+    expect(result).toEqual(["proxy1", "proxy2", "proxy3"]);
+  });
+
+  test("should return an empty array if no proxies are present in the response", async () => {
+    axios.get.mockResolvedValueOnce({ data: emptyResponseData });
+
+    const result = await getListOfAllApiProxiesFromApigee(orgName, options);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis`,
+      options
+    );
+    expect(result).toEqual([]);
+  });
+
+  test("should log error message on request failure", async () => {
+    axios.get.mockRejectedValueOnce(error);
+
+    await getListOfAllApiProxiesFromApigee(orgName, options);
+
+    expect(axios.get).toHaveBeenCalledWith(
+      `https://apigee.googleapis.com/v1/organizations/${orgName}/apis`,
+      options
+    );
+    expect(logError).toHaveBeenCalledWith(error.message);
   });
 });
