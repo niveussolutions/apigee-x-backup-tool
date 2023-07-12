@@ -15,6 +15,7 @@ jest.mock("fs", () => ({
   mkdir: jest.fn(),
   writeFile: jest.fn(),
   readdirSync: jest.fn(),
+  mkdirSync: jest.fn(),
 }));
 
 // Mock the chalk.js module functions
@@ -300,5 +301,106 @@ describe("getListOfAllApiProxiesFromApigee", () => {
       options
     );
     expect(logError).toHaveBeenCalledWith(error.message);
+  });
+});
+
+describe("getProxyAndRevisionsStoredLocally", () => {
+  const localBackUpPath = "/path/to/backups";
+  beforeEach(() => {
+    fs.existsSync.mockReset();
+    fs.mkdirSync.mockReset();
+    fs.readdirSync.mockReset();
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should create the local backup directory if it does not exist", () => {
+    fs.existsSync.mockReturnValue(false);
+    fs.readdirSync
+      .mockReturnValueOnce([
+        { name: "proxy1", isDirectory: () => true },
+        { name: "proxy2", isDirectory: () => true },
+        { name: "proxy3", isDirectory: () => true },
+      ])
+      .mockReturnValueOnce([
+        { name: "file1-revision-1.zip", isDirectory: () => false },
+        { name: "file1-revision-2.zip", isDirectory: () => false },
+      ])
+      .mockReturnValueOnce([
+        { name: "file2-revision-1.zip", isDirectory: () => false },
+        { name: "file2-revision-2.zip", isDirectory: () => false },
+      ])
+      .mockReturnValue([
+        { name: "file3-revision-1.zip", isDirectory: () => false },
+        { name: "file3-revision-2.zip", isDirectory: () => false },
+        { name: "file3-revision-3.zip", isDirectory: () => false },
+      ]);
+
+    const result = getProxyAndRevisionsStoredLocally(localBackUpPath);
+
+    expect(fs.existsSync).toHaveBeenCalledWith(localBackUpPath);
+    expect(fs.mkdirSync).toHaveBeenCalledWith(localBackUpPath);
+  });
+
+  // Test Case 2: should read the proxy and revision information correctly
+  test("should read the proxy and revision information correctly", () => {
+    fs.existsSync.mockReturnValue(true);
+    fs.readdirSync
+      .mockReturnValueOnce([
+        { name: "proxy1", isDirectory: () => true },
+        { name: "proxy2", isDirectory: () => true },
+        { name: "proxy3", isDirectory: () => true },
+      ])
+      .mockReturnValueOnce([
+        { name: "file1-revision-1.zip", isDirectory: () => false },
+        { name: "file1-revision-2.zip", isDirectory: () => false },
+      ])
+      .mockReturnValueOnce([
+        { name: "file2-revision-1.zip", isDirectory: () => false },
+        { name: "file2-revision-2.zip", isDirectory: () => false },
+      ])
+      .mockReturnValue([
+        { name: "file3-revision-1.zip", isDirectory: () => false },
+        { name: "file3-revision-2.zip", isDirectory: () => false },
+        { name: "file3-revision-3.zip", isDirectory: () => false },
+      ]);
+
+    const result = getProxyAndRevisionsStoredLocally(localBackUpPath);
+
+    expect(fs.existsSync).toHaveBeenCalledWith(localBackUpPath);
+    expect(fs.readdirSync).toHaveBeenNthCalledWith(1, localBackUpPath, {
+      withFileTypes: true,
+    });
+
+    expect(fs.readdirSync).toHaveBeenNthCalledWith(
+      2,
+      localBackUpPath + "/proxy1",
+      {
+        withFileTypes: true,
+      }
+    );
+
+    expect(fs.readdirSync).toHaveBeenNthCalledWith(
+      3,
+      localBackUpPath + "/proxy2",
+      {
+        withFileTypes: true,
+      }
+    );
+
+    expect(fs.readdirSync).toHaveBeenNthCalledWith(
+      4,
+      localBackUpPath + "/proxy3",
+      {
+        withFileTypes: true,
+      }
+    );
+
+    expect(result).toEqual({
+      proxy1: ["1", "2"],
+      proxy2: ["1", "2"],
+      proxy3: ["1", "2", "3"],
+    });
   });
 });
