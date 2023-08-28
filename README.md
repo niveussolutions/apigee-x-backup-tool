@@ -1,8 +1,10 @@
 # APIGEE - Backup Tool
 
+#### Supports both Apigee x and Apigee hybrid , does not support Apigee Edge
+
 **The tool can backup Apigee Api Proxies, Shared flows, Api Products etc**
 
-> NOTE: The Script is tested and works perfectly on Linux(ubuntu) and nodejs version >16
+> NOTE: The Script is tested and works fine on Linux(ubuntu) and nodejs version >16
 
 
 
