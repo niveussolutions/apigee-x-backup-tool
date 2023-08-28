@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-
 import { program } from "commander";
 
 import { gcloudLogin, setConfig } from "../lib/utils.js";
@@ -13,6 +12,14 @@ import backUpFlowHooks from "../lib/Flow-Hooks.js";
 import backUpCustomReports from "../lib/Custom-report.js";
 import backUpTargetServer from "../lib/target-server.js";
 import { logError, logWarning } from "../lib/chalk.js";
+
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { readFileSync } from "fs";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packagePath = `${__dirname}/../package.json`;
+const packageJSON = readFileSync(packagePath);
+const packageObj = JSON.parse(packageJSON);
 
 function config(action) {
   switch (action) {
@@ -113,11 +120,11 @@ program
   .description(
     "CLI tool to backup  apigee resources like api proxies, shared flows, Api products etc"
   )
-  .version("2.0.1");
+  .version(packageObj.version);
 
 program
   .command("config")
-  .argument("<action>", "Config action (set)")
+  .argument("<activn>", "Config action (set)")
   .description("configure organization name and backupFolderPath")
   .requiredOption("-O, --orgName <string>", "Name of the apigee organization")
   .requiredOption(
