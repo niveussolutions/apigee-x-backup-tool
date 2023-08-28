@@ -1,6 +1,6 @@
 {
-  "name": "apigee-backup-tool",
-  "version": "2.0.0",
+  "name": "@niveus/apigee-backup-tool",
+  "version": "2.0.1",
   "type": "module",
   "bin": {
     "apigee-backup-tool": "./bin/cli.js"
