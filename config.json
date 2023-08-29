@@ -1,5 +1,5 @@
 {
-  "organization": "organization-name",
+	"organization": "organization-name",
 
-  "backupFolderPath": "/home/example/backup/folder/path/"
+	"backupFolderPath": "/home/example/backup/folder/path/"
 }

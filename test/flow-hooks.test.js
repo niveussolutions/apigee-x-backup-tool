@@ -1,5 +1,5 @@
 // apigeeFunctions.test.js
-import { logError, logSuccess } from '../lib/chalk';
+import { logError } from '../lib/chalk';
 import axios from 'axios';
 import fs from 'fs';
 import {

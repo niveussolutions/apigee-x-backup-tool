@@ -37,7 +37,7 @@ const error = new Error('Test error');
 
 describe('getListOfApiProductsFromApigee', () => {
 	test('call apigee api using axios with url and headers', async () => {
-		const data = await getListOfApiProductsFromApigee(orgName, options);
+		await getListOfApiProductsFromApigee(orgName, options);
 
 		expect(axios.get).toHaveBeenCalledWith(
 			`https://apigee.googleapis.com/v1/organizations/${orgName}/apiproducts`,
@@ -98,7 +98,6 @@ describe('saveApiProductLocally', () => {
 	const localBackUpPath = '/home/natesh/Documents/test-backup/api-product';
 	const fileName = 'test-file.json';
 	const fileData = 'Hello, world!';
-	const error1 = new Error('testing');
 
 	test('create folder if does not exists', async () => {
 		fs.existsSync.mockReturnValue(false);
@@ -107,9 +106,7 @@ describe('saveApiProductLocally', () => {
 	});
 
 	test('Write file to backup folder', async () => {
-		fs.writeFile.mockImplementation((filePath, data, callback) =>
-			callback(null),
-		);
+		fs.writeFile.mockImplementation((filePath, data, callback) => callback(null));
 		fs.existsSync.mockReturnValue(true);
 
 		saveApiProductLocally(localBackUpPath, fileName, fileData);

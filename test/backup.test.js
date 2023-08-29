@@ -1,14 +1,11 @@
 // Import the necessary dependencies and the function to test
 import backUpApiProxy from '../lib/api-proxy.js'; // Replace with the correct path to your module
 import backUpSharedFlow from '../lib/shared-flow.js';
-import { logError, logWarning, logSuccess, logInfo } from '../lib/chalk.js';
+import { logError } from '../lib/chalk.js';
 import {
-	getProxyAndRevisionsStoredLocally,
 	getListOfAllApiProxiesFromApigee,
-	getRevisionsForProxyFromApigee,
 	downloadRevisionForProxy,
 	saveProxyRevisionLocally,
-	getConfig,
 	getListOfAllSharedFlowsFromApigee,
 	downloadRevisionForSharedFlow,
 	saveSharedFlowRevisionLocally,

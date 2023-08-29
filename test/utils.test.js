@@ -1,7 +1,6 @@
-import { logError, logSuccess } from '../lib/chalk';
-import axios from 'axios';
+import { logSuccess } from '../lib/chalk';
 import fs from 'fs';
-import { getConfig, setConfig, listEnvironments } from '../lib/utils.js';
+import { getConfig, setConfig } from '../lib/utils.js';
 
 jest.mock('fs', () => ({
 	existsSync: jest.fn(),
@@ -22,9 +21,6 @@ jest.mock('../lib/chalk.js', () => ({
 }));
 
 jest.mock('axios');
-
-// Mocking the options object for axios
-const mockOptions = { headers: { Authorization: 'Bearer YOUR_ACCESS_TOKEN' } };
 
 describe('getConfig', () => {
 	test('should return valid configuration data', () => {
@@ -47,11 +43,6 @@ describe('getConfig', () => {
 	//     expect(() => getConfig()).toThrow();
 	//   });
 });
-
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const configPath = `${__dirname}/../config.json`;
 
 describe('setConfig', () => {
 	test('should set the configuration successfully', () => {

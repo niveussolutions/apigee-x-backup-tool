@@ -23,11 +23,11 @@ const packageObj = JSON.parse(packageJSON);
 
 function config(action) {
 	switch (action) {
-	case 'set':
-		setConfig(this.opts());
-		break;
-	default:
-		logError(`illegal action - ${action}`);
+		case 'set':
+			setConfig(this.opts());
+			break;
+		default:
+			logError(`illegal action - ${action}`);
 	}
 }
 
@@ -40,8 +40,8 @@ function backup(apigeeResourceType) {
 
 	if (
 		apigeeResourceType !== 'flow-hook' &&
-    apigeeResourceType !== 'target-server' &&
-    envName != 'None'
+		apigeeResourceType !== 'target-server' &&
+		envName != 'None'
 	) {
 		logWarning(
 			`--envName is a optional parameter and it is not expected for apigee resource of type-${apigeeResourceType}`,
@@ -56,7 +56,7 @@ function backup(apigeeResourceType) {
 
 	if (
 		apigeeResourceType === 'api-proxy' ||
-    apigeeResourceType === 'shared-flow'
+		apigeeResourceType === 'shared-flow'
 	) {
 		if (!all && (!name || !revision)) {
 			logError('requires --name and --revision options or provide --all option');
@@ -66,8 +66,8 @@ function backup(apigeeResourceType) {
 
 	if (
 		apigeeResourceType !== 'api-proxy' &&
-    apigeeResourceType !== 'shared-flow' &&
-    revision
+		apigeeResourceType !== 'shared-flow' &&
+		revision
 	) {
 		logWarning(
 			`--revision option is not expected for apigee resource of type - ${apigeeResourceType}`,
@@ -81,35 +81,35 @@ function backup(apigeeResourceType) {
 	}
 
 	switch (apigeeResourceType) {
-	case 'all':
-		backUpAll();
-		break;
-	case 'api-proxy':
-		backUpApiProxy(all, name, revision);
-		break;
-	case 'shared-flow':
-		backUpSharedFlow(all, name, revision);
-		break;
-	case 'api-product':
-		backUpApiProduct(all, name);
-		break;
-	case 'developer':
-		backUpDev(all, name);
-		break;
-	case 'developer-app':
-		backUpDevApp(all, name, devEmail);
-		break;
-	case 'target-server':
-		backUpTargetServer(all, envName);
-		break;
-	case 'flow-hook':
-		backUpFlowHooks(all, envName);
-		break;
-	case 'custom-report':
-		backUpCustomReports(all, name);
-		break;
-	default:
-		logError(`illegal apigee resource type - ${apigeeResourceType}`);
+		case 'all':
+			backUpAll();
+			break;
+		case 'api-proxy':
+			backUpApiProxy(all, name, revision);
+			break;
+		case 'shared-flow':
+			backUpSharedFlow(all, name, revision);
+			break;
+		case 'api-product':
+			backUpApiProduct(all, name);
+			break;
+		case 'developer':
+			backUpDev(all, name);
+			break;
+		case 'developer-app':
+			backUpDevApp(all, name, devEmail);
+			break;
+		case 'target-server':
+			backUpTargetServer(all, envName);
+			break;
+		case 'flow-hook':
+			backUpFlowHooks(all, envName);
+			break;
+		case 'custom-report':
+			backUpCustomReports(all, name);
+			break;
+		default:
+			logError(`illegal apigee resource type - ${apigeeResourceType}`);
 	}
 }
 
@@ -173,7 +173,7 @@ program
 program
 	.command('login')
 	.description(
-		'Login to google cloud - Runs \'gcloud application-default login\' command',
+		'Login to google cloud - Runs gcloud application-default login command',
 	)
 	.action(gcloudLogin);
 

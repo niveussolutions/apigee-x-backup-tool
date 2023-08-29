@@ -6,7 +6,7 @@ import {
 	getProxyAndRevisionsStoredLocally,
 	getListOfAllApiProxiesFromApigee,
 } from '../lib/utils.js';
-import { logError, logWarning, logSuccess, logInfo } from '../lib/chalk.js';
+import { logError, logSuccess } from '../lib/chalk.js';
 import axios from 'axios';
 
 // Mock the fs module functions
@@ -337,7 +337,7 @@ describe('getProxyAndRevisionsStoredLocally', () => {
 				{ name: 'file3-revision-3.zip', isDirectory: () => false },
 			]);
 
-		const result = getProxyAndRevisionsStoredLocally(localBackUpPath);
+		getProxyAndRevisionsStoredLocally(localBackUpPath);
 
 		expect(fs.existsSync).toHaveBeenCalledWith(localBackUpPath);
 		expect(fs.mkdirSync).toHaveBeenCalledWith(localBackUpPath);
