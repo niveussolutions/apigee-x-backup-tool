@@ -1,137 +1,134 @@
 // apigeeFunctions.test.js
-import { logError, logSuccess } from "../lib/chalk";
-import axios from "axios";
-import fs from "fs";
+import { logError, logSuccess } from '../lib/chalk'
+import axios from 'axios'
+import fs from 'fs'
 import {
   getCustomReportFromApigee,
   getListOfCustomReportFromApigee,
   saveCustomReportLocally,
-} from "../lib/utils.js";
+} from '../lib/utils.js'
 
-jest.mock("fs", () => ({
+jest.mock('fs', () => ({
   existsSync: jest.fn(),
   mkdir: jest.fn(),
   writeFile: jest.fn(),
   readdirSync: jest.fn(),
   mkdirSync: jest.fn(),
-}));
+}))
 
-jest.mock("../lib/chalk.js", () => ({
+jest.mock('../lib/chalk.js', () => ({
   logError: jest.fn(),
   logWarning: jest.fn(),
   logSuccess: jest.fn(),
   logInfo: jest.fn(),
-}));
+}))
 
-jest.mock("axios");
+jest.mock('axios')
 
 // Mocking the options object for axios
-const mockOptions = { headers: { Authorization: "Bearer YOUR_ACCESS_TOKEN" } };
+const mockOptions = { headers: { Authorization: 'Bearer YOUR_ACCESS_TOKEN' } }
 
-describe("getListOfCustomReportFromApigee", () => {
-  test("should return an array of Custom reports when data is available", async () => {
+describe('getListOfCustomReportFromApigee', () => {
+  test('should return an array of Custom reports when data is available', async () => {
     const mockResponse = {
-      data: { qualifier: ["report1", "report2"] },
-    };
+      data: { qualifier: ['report1', 'report2'] },
+    }
 
-    axios.get.mockResolvedValue(mockResponse);
+    axios.get.mockResolvedValue(mockResponse)
 
-    const result = await getListOfCustomReportFromApigee(
-      "orgName",
-      mockOptions
-    );
+    const result = await getListOfCustomReportFromApigee('orgName', mockOptions)
 
-    expect(result).toEqual(["report1", "report2"]);
-  });
+    expect(result).toEqual(['report1', 'report2'])
+  })
 
-  test("should return an empty array when no data is available", async () => {
-    const mockResponse = { data: undefined };
-    axios.get.mockResolvedValue(mockResponse);
+  test('should return an empty array when no data is available', async () => {
+    const mockResponse = { data: undefined }
+    axios.get.mockResolvedValue(mockResponse)
 
     const result = await getListOfCustomReportFromApigee(
-      "orgName",
+      'orgName',
 
-      mockOptions
-    );
+      mockOptions,
+    )
 
-    expect(result).toEqual([]);
-  });
+    expect(result).toEqual([])
+  })
 
-  test("should log an error when an error occurs", async () => {
-    const errorMessage = "Failed to fetch data";
-    axios.get.mockRejectedValue(new Error(errorMessage));
+  test('should log an error when an error occurs', async () => {
+    const errorMessage = 'Failed to fetch data'
+    axios.get.mockRejectedValue(new Error(errorMessage))
 
-    await getListOfCustomReportFromApigee("orgName", mockOptions);
+    await getListOfCustomReportFromApigee('orgName', mockOptions)
 
-    expect(logError).toHaveBeenCalledWith(errorMessage);
-  });
-});
+    expect(logError).toHaveBeenCalledWith(errorMessage)
+  })
+})
 
-describe("getCustomReportFromApigee", () => {
-  test("should return application data when successful", async () => {
-    const mockResponse = { data: { key: "value" } };
-    axios.get.mockResolvedValue(mockResponse);
+describe('getCustomReportFromApigee', () => {
+  test('should return application data when successful', async () => {
+    const mockResponse = { data: { key: 'value' } }
+    axios.get.mockResolvedValue(mockResponse)
 
     const result = await getCustomReportFromApigee(
-      "orgName",
-      "report-1",
-      mockOptions
-    );
+      'orgName',
+      'report-1',
+      mockOptions,
+    )
 
-    expect(result).toEqual(mockResponse.data);
-  });
+    expect(result).toEqual(mockResponse.data)
+  })
 
-  test("should log an error when an error occurs", async () => {
-    const errorMessage = "Failed to fetch data";
-    axios.get.mockRejectedValue(new Error(errorMessage));
+  test('should log an error when an error occurs', async () => {
+    const errorMessage = 'Failed to fetch data'
+    axios.get.mockRejectedValue(new Error(errorMessage))
 
-    await getCustomReportFromApigee("orgName", "report-1", mockOptions);
+    await getCustomReportFromApigee('orgName', 'report-1', mockOptions)
 
-    expect(logError).toHaveBeenCalledWith(errorMessage);
-  });
-});
+    expect(logError).toHaveBeenCalledWith(errorMessage)
+  })
+})
 
-describe("saveCustomReportLocally", () => {
+describe('saveCustomReportLocally', () => {
   afterEach(() => {
-    jest.clearAllMocks();
-  });
-  test("should create a directory and save the file", () => {
-    const mockLocalPath = "mock/local/path";
-    const mockFileName = "mockFile.json";
-    const mockFileData = '{ "key": "value" }';
+    jest.clearAllMocks()
+  })
+  test('should create a directory and save the file', () => {
+    const mockLocalPath = 'mock/local/path'
+    const mockFileName = 'mockFile.json'
+    const mockFileData = '{ "key": "value" }'
 
-    fs.existsSync.mockReturnValue(false);
+    fs.existsSync.mockReturnValue(false)
 
-    saveCustomReportLocally(mockLocalPath, mockFileName, mockFileData);
+    saveCustomReportLocally(mockLocalPath, mockFileName, mockFileData)
 
-    expect(fs.existsSync).toHaveBeenCalledWith(mockLocalPath);
-    expect(fs.mkdirSync).toHaveBeenCalledWith(mockLocalPath);
+    expect(fs.existsSync).toHaveBeenCalledWith(mockLocalPath)
+    expect(fs.mkdirSync).toHaveBeenCalledWith(mockLocalPath)
     expect(fs.writeFile).toHaveBeenCalledWith(
       `${mockLocalPath}/${mockFileName}`,
       mockFileData,
-      expect.any(Function)
-    );
+      expect.any(Function),
+    )
     // You might also want to assert that mockLogSuccess was called
-  });
+  })
 
-  test("should save the file without creating a directory", () => {
-    const mockLocalPath = "mock/local/path";
-    const mockFileName = "mockFile.json";
-    const mockFileData = '{ "key": "value" }';
+  test('should save the file without creating a directory', () => {
+    const mockLocalPath = 'mock/local/path'
+    const mockFileName = 'mockFile.json'
+    const mockFileData = '{ "key": "value" }'
 
-    fs.existsSync.mockReturnValue(true);
+    fs.existsSync.mockReturnValue(true)
 
-    saveCustomReportLocally(mockLocalPath, mockFileName, mockFileData);
+    saveCustomReportLocally(mockLocalPath, mockFileName, mockFileData)
 
-    expect(fs.existsSync).toHaveBeenCalledWith(mockLocalPath);
-    expect(fs.mkdirSync).not.toHaveBeenCalled();
+    expect(fs.existsSync).toHaveBeenCalledWith(mockLocalPath)
+    expect(fs.mkdirSync).not.toHaveBeenCalled()
     expect(fs.writeFile).toHaveBeenCalledWith(
       `${mockLocalPath}/${mockFileName}`,
       mockFileData,
-      expect.any(Function)
-    );
+      expect.any(Function),
+    )
     // You might also want to assert that mockLogSuccess was called
-  });
+  })
 
   //   test("should throw an error during file write", () => {
   //     const mockLocalPath = "mock/local/path";
@@ -149,4 +146,4 @@ describe("saveCustomReportLocally", () => {
   //       saveTargetServerLocally(mockLocalPath, mockFileName, mockFileData);
   //     }).toThrow(mockError);
   //   });
-});
+})
