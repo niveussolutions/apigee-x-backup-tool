@@ -132,6 +132,8 @@ run below scripts to backup Target servers for a specific environment
 
 This tool is published to npm registry. Can be installed as a global npm package and used as a cli tool - [https://www.npmjs.com/package/@niveus/apigee-backup-tool](https://www.npmjs.com/package/@niveus/apigee-backup-tool)
 
+[Documentation Link](https://niveussolutions.github.io/apigee-x-backup-tool/)
+
 **or**
 
 1. run `npm install` to install all the dependencies, from inside the respository where package.json file is located
