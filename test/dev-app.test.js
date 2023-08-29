@@ -41,7 +41,7 @@ describe('getListOfDevAppsFromApigee', () => {
 			mockOptions,
 		);
 
-		expect(result).toEqual(['app2', 'app2']);
+		expect(result).toEqual(['app1', 'app2']);
 	});
 
 	test('should return an empty array when no data is available', async () => {
