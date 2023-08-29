@@ -52,9 +52,11 @@
 		}
 	},
 	"lint-staged": {
+		"*": [
+			"prettier --write"
+		],
 		"*.js": [
 			"eslint --fix",
-			"prettier --write",
 			"npm test"
 		]
 	},
