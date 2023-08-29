@@ -17,17 +17,133 @@
 
 ### Getting Started
 
+There are 2 ways you can run the apigee-backup-script.
+
+1. Using npm scripts
+2. As a cli tool
+
+#### Using npm scripts
+
+1. run `gcloud auth application-default login`
+
+2. run `npm install` to install all the dependencies, from inside the respository where package.json file is located
+
+3. update organization(apigee organization- you will find this in the top left dropdown in the apigee console/ project id in the GCP console ), backupFolderPath (path of the backup folder , add "/" at the end of the path) in config.json
+
+4. Run below npm scripts as per requirement
+
+run `npm run backupAll` to backup Api Proxy, Api product,developer apps , developers, target server etc
+
+run below scripts to backup Api Proxies
+
+```
+  // To backup all revisions of all api proxy
+  npm run backupApiProxy --all
+
+  // To backup specific revision of a specific api proxy
+  npm run backupApiProxy --name=name-of-proxy --revision=revision-of-proxy
+
+```
+
+run below scripts to backup Shared Flows
+
+```
+  // To backup all revisions of all shared flows
+  npm run backupSharedFlow --all
+
+  // To backup specific revision of a specific shared flow
+  npm run backupSharedFlow --name=name-of-sharedflow --revision=revision-of-sharedflow
+
+```
+
+run below scripts to backup Api Products
+
+```
+  // To backup all Api Products
+  npm run backupApiProduct --all
+
+  // To backup  a specific Api Product
+  npm run backupApiProduct --name=name-of-api-product
+
+```
+
+run below scripts to backup Developers
+
+```
+  // To backup all Developers
+  npm run backupDev --all
+
+  // To backup  a specific Developer
+  npm run backupDev --name=developer-email
+
+```
+
+run below scripts to backup Developer App
+
+```
+  // To backup all Developer Apps
+  npm run backupDevApp --all
+
+  // To backup  a specific Developer App
+  npm run backupDevApp --name=name-of-app --developer=developer-email
+
+```
+
+run below scripts to backup Custom Reports
+
+```
+  // To backup all Custom reports
+  npm run backupCustomReports --all
+
+  // To backup  a specific Custom Report
+  npm run backupCustomReports --name=name-of-custom-report
+
+  name-of-custom-report - is actually a id Ex: 3aed7d5c-330d-4e30-acf1-d19a25be64ba
+
+```
+
+run below scripts to backup Flow Hooks
+
+```
+  // To backup all Flow hooks for all environments
+  npm run backupFlowHooks --all
+
+  // To backup  all Flow hooks for a specific environment
+  npm run backupFlowHooks --envName=name-of-environment
+
+
+```
+
+run below scripts to backup Target servers for a specific environment
+
+```
+  // To backup all Target servers for all environments
+  npm run backupTargetServer --all
+
+  // To backup  all Target Servers for a specific environment
+  npm run backupTargetServer --envName=name-of-environment
+
+
+```
+
+1. Run step 1 and step 3 everytime you want to switch between gcp accounts and apigee organization
+
+#### As a cli tool
+
 This tool is published to npm registry. Can be installed as a global npm package and used as a cli tool - [https://www.npmjs.com/package/@niveus/apigee-backup-tool](https://www.npmjs.com/package/@niveus/apigee-backup-tool)
 
-1. run npm install -g @niveus/apigee-backup-tool to install the script as a global npm package
+**or**
 
-2. Now you can run the script as a cli tool from anywhere from your ubuntu machine
+1. run `npm install` to install all the dependencies, from inside the respository where package.json file is located
 
-3. run `apigee-backup-tool login` to authenticate with google cloud
+2. run `npm install -g .` to install the script as a global npm package
+3. Now you can run the script as a cli tool from anywhere from your ubuntu machine
 
-4. run `apigee-backup-tool config set --orgName name-of-organization --backupFolderPath /path/to/backup/folder/` to configure the apigee organization name and backup folder path
+4. run `apigee-backup-tool login` to authenticate with google cloud
 
-5. run `apigee-backup-tool --help` to get help on all the available commands
+5. run `apigee-backup-tool config set --orgName name-of-organization --backupFolderPath /path/to/backup/folder/` to configure the apigee organization name and backup folder path
+
+6. run `apigee-backup-tool --help` to get help on all the available commands
 
 ```
 Usage: apigee-backup-tool [options] [command]
