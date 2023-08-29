@@ -3,7 +3,7 @@
 	"version": "2.0.2",
 	"type": "module",
 	"bin": {
-		"apigee-backup-tool-test-2": "./bin/cli.js"
+		"apigee-backup-tool": "./bin/cli.js"
 	},
 	"author": "natesh246@gmail.com",
 	"license": "MIT",
@@ -25,6 +25,7 @@
 		"lint": "eslint .",
 		"lint-fix": "eslint --fix .",
 		"format": "prettier --write .",
+		"npm-publish": "npm publish --access public",
 		"test": "jest",
 		"backupAll": "node -e 'import(\"./index.js\").then(async loadedModule => await loadedModule.default())'",
 		"backupApiProxy": "node -e 'import(\"./lib/api-proxy.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
