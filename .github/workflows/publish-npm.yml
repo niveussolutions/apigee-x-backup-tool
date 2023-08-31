@@ -13,6 +13,8 @@ jobs:
      with:
       node-version: '16.x'
       registry-url: 'https://registry.npmjs.org'
+      always-auth: true
+      scope: '@niveus'
    - name: Install dependencies  🔧
      run: npm ci
    - name: Publish package on NPM 📦
