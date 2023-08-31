@@ -1,5 +1,5 @@
 {
-	"name": "@niveus/apigee-backup-tool",
+	"name": "@test-niveus/apigee-backup-tool",
 	"version": "2.0.2",
 	"type": "module",
 	"bin": {
