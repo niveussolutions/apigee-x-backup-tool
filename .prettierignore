@@ -1,3 +1,5 @@
 docs/layouts/default.html
 
 .prettierignore
+
+.gitignore
