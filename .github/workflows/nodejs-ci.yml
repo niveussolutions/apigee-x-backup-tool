@@ -21,5 +21,11 @@ jobs:
    - run: npm test
    - name: Upload coverage reports to Codecov
      uses: codecov/codecov-action@v3
+     with:
+      token: ${{ secrets.CODECOV_TOKEN }}
+      file: ./coverage/lcov.info
+      flags: unittests
+      name: codecov-upload
+      # fail_ci_if_error: true
      env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
