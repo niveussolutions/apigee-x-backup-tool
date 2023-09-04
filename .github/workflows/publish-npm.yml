@@ -21,3 +21,8 @@ jobs:
      run: npm run npm-publish
      env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+   - name: Generate changelog
+     id: changelog
+     uses: metcalfc/changelog-generator@v4.1.0
+     with:
+      myToken: ${{ secrets.GITHUB_TOKEN }}
