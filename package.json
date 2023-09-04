@@ -36,10 +36,13 @@
 		"backupCustomReports": "node -e 'import(\"./lib/Custom-report.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name))'",
 		"backupTargetServer": "node -e 'import(\"./lib/target-server.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'",
 		"backupFlowHooks": "node -e 'import(\"./lib/Flow-Hooks.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"commitlint": "commitlint --edit"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.22.6",
+		"@commitlint/cli": "^17.7.1",
+		"@commitlint/config-conventional": "^17.7.0",
 		"babel-plugin-transform-import-meta": "^2.2.0",
 		"eslint": "^8.48.0",
 		"husky": "^8.0.0",
