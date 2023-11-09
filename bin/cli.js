@@ -113,6 +113,15 @@ function backup(apigeeResourceType) {
 	}
 }
 
+process.on('uncaughtException', (error) => {
+	logError(error.message);
+	process.exit(1);
+});
+
+process.on('unhandledRejection', (error) => {
+	logError(error.message);
+});
+
 program
 	.name('apigee-backup-tool')
 	.description(

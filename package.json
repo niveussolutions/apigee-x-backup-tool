@@ -65,7 +65,7 @@
 		],
 		"*.js": [
 			"eslint --fix",
-			"npm test"
+			"npm run test -- --findRelatedTests --passWithNoTests"
 		]
 	},
 	"jest": {
