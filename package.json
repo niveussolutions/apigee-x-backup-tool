@@ -38,7 +38,8 @@
 		"backupFlowHooks": "node -e 'import(\"./lib/Flow-Hooks.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_envname))'",
 		"prepare": "husky install",
 		"commitlint": "commitlint --edit",
-		"commit": "cz"
+		"commit": "cz",
+		"dev": "node ./bin/cli.js"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.22.6",
