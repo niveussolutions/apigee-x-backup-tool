@@ -16,7 +16,7 @@
 		"url": "https://github.com/niveussolutions/apigee-x-backup-tool/issues"
 	},
 	"dependencies": {
-		"axios": "^0.26.1",
+		"axios": "^1.6.0",
 		"chalk": "^5.2.0",
 		"commander": "^10.0.1",
 		"google-auth-library": "^7.14.0"
