@@ -6,24 +6,19 @@ import backUpDevApp from './lib/dev-app.js';
 import backUpTargetServer from './lib/target-server.js';
 import backUpCustomReports from './lib/Custom-report.js';
 import backupFlowHooks from './lib/Flow-Hooks.js';
-import { getConfig, listEnvironments } from './lib/utils.js';
-
-import { GoogleAuth } from 'google-auth-library';
-const auth = new GoogleAuth();
+import { getAuthToken, getConfig, listEnvironments } from './lib/utils.js';
 
 const config = getConfig();
 
 const organizationName = config.organization;
 
-const authToken = await auth.getAccessToken();
-
-const options = {
-	headers: {
-		Authorization: `Bearer ${authToken}`,
-	},
-};
-
 const backUpAll = async () => {
+	const authToken = await getAuthToken();
+	const options = {
+		headers: {
+			Authorization: `Bearer ${authToken}`,
+		},
+	};
 	const envs = await listEnvironments(organizationName, options);
 
 	await backUpApiProxy(true);
