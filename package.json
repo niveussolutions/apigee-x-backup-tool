@@ -26,7 +26,7 @@
 		"lint-fix": "eslint --fix .",
 		"format": "prettier --write .",
 		"npm-publish": "npm publish --access public",
-		"test": "jest --coverage",
+		"test": "jest --coverage --passWithNoTests",
 		"backupAll": "node -e 'import(\"./index.js\").then(async loadedModule => await loadedModule.default())'",
 		"backupApiProxy": "node -e 'import(\"./lib/api-proxy.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
 		"backupSharedFlow": "node -e 'import(\"./lib/shared-flow.js\").then(async loadedModule => await loadedModule.default(process.env.npm_config_all,process.env.npm_config_name,process.env.npm_config_revision))'",
@@ -65,7 +65,7 @@
 		],
 		"*.js": [
 			"eslint --fix",
-			"npm run test --findRelatedTests --passWithNoTests"
+			"npm run test"
 		]
 	},
 	"jest": {
