@@ -1,4 +1,13 @@
 #! /usr/bin/env node
+import { logError, logInfo, logWarning } from '../lib/chalk.js';
+const [major] = process.versions.node.split('.').map(Number);
+const MINIMUM_NODE_VERSION = 16;
+
+if (major < MINIMUM_NODE_VERSION) {
+	logInfo('Use Nodejs version >=16');
+	process.exit(0);
+}
+
 import { program } from 'commander';
 
 import { gcloudLogin, setConfig } from '../lib/utils.js';
@@ -11,7 +20,6 @@ import backUpDevApp from '../lib/dev-app.js';
 import backUpFlowHooks from '../lib/Flow-Hooks.js';
 import backUpCustomReports from '../lib/Custom-report.js';
 import backUpTargetServer from '../lib/target-server.js';
-import { logError, logWarning } from '../lib/chalk.js';
 
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
