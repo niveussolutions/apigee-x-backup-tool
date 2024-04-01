@@ -83,7 +83,7 @@
 		"apigee"
 	],
 	"engines": {
-		"node": ">=16 <20"
+		"node": ">=16"
 	},
 	"os": [
 		"debian",
